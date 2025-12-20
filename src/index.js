@@ -323,8 +323,8 @@ export const route = (selector,routes,state = {}) => {
         if (!component) {
             for (const route in routes) {
                 if (route.includes(':')) {
-                    const routeRegex = new RegExp(`^${route.replace(/:[^\s/]+/g,'([^/]+)')}$`);
-                    const match = path.match(routeRegex);
+                    const RE = new RegExp(`^${route.replace(/:[^\s/]+/g,'([^/]+)')}$`);
+                    const match = path.match(RE);
                     if (match) {
                         component = routes[route];
                         const keys = route.match(/:[^\s/]+/g);
