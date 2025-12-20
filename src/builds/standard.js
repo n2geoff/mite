@@ -1,11 +1,11 @@
 export {
     h,
     mount,
-    createStore,
+    store,
+    isStore,
     patch,
     patchProps,
     createElement,
-    ensureStore,
     router,
     navigate,
     Link

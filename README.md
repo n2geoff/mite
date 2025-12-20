@@ -42,7 +42,7 @@ Want more features, you have options
 
 | Build                                  | Size* | Features                            |
 | -------------------------------------- | ----- | ----------------------------------- |
-| [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `createStore` |
+| [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `store` |
 | [Standard](/dist/mite.standard.min.js) | ~3KB  | adds `router`, `navigate`, `Link`   |
 | [Full](/dist/mite.full.min.js)         | ~4KB  | adds `html` tagged templates for UI |
 
@@ -170,7 +170,7 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 | `h(tag, props, ...children)`      | Hyperscript style UI component. Returns DOM. |
 | `mount(selector, view, state)`    | Mounts a component to a DOM element. Returns a store.       |
 | `router(selector, routes, state)` | Mounts & Initializes hash-based routing. Returns a store.   |
-| `createStore(initial, logger)`    | Creates a standalone reactive store.                        |
+| `store(initial, logger)`    | Creates a standalone reactive store.                        |
 | `Link(props, ...children)`        | Helper for `<a>` tags. Auto-adds `#` and `active` class.    |
 | `navigate(path)`                  | Programmatically changes the route.                         |
 | `html` | Write UI using Tagged-Template-Literal alternate to `h`  |

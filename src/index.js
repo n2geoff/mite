@@ -223,7 +223,7 @@ export const patch = (parent,newNode,oldNode,index = 0) => {
  * @param {boolean} [logger=false] - Whether to log state updates to the console.
  * @returns {Object} An object containing getState, update, and subscribe methods.
  */
-export const createStore = (initState,logger = false) => {
+export const store = (initState,logger = false) => {
     let state = { ...initState };
     const listeners = [];
     return {
@@ -238,19 +238,19 @@ export const createStore = (initState,logger = false) => {
 };
 
 
-export const ensureStore = (stateOrStore) => (stateOrStore?.subscribe ? stateOrStore : createStore(stateOrStore || {}));
+export const isStore = (state) => (state?.subscribe ? state : store(state || {}));
 
 /**
  * Mounts a reactive view to a DOM selector.
  *
  * @param {string} selector - The CSS selector for the root element.
  * @param {Function} view - A function (state, update) returning a VNode.
- * @param {Object} [stateOrStore={}] - Initial state or an existing Store instance.
+ * @param {Object} [state={}] - Initial state or an existing Store instance.
  * @returns {Object} The store instance used by the application.
  */
-export const mount = (selector,view,stateOrStore = {}) => {
+export const mount = (selector,view,state = {}) => {
     const container = document.querySelector(selector);
-    const store = ensureStore(stateOrStore);
+    const store = isStore(state);
     let oldVNode = null;
 
     const render = () => {
@@ -300,15 +300,15 @@ export const Link = (props,...children) => {
  *
  * @param {string} selector - The CSS selector for the router outlet.
  * @param {Object.<string, Function>} routes - A mapping of paths to view functions.
- * @param {Object} [stateOrStore={}] - Initial state or an existing Store instance.
+ * @param {Object} [state={}] - Initial state or an existing Store instance.
  * @returns {Object} The store instance used by the router.
  */
-export const router = (selector,routes,stateOrStore = {}) => {
+export const router = (selector,routes,state = {}) => {
     const container = document.querySelector(selector);
     // prevents hydration issues
     container.innerHTML = '';
 
-    const store = ensureStore(stateOrStore);
+    const store = isStore(state);
     let oldVNode = null;
 
     const render = () => {
