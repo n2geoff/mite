@@ -7,8 +7,15 @@
 	"bugs": {
 		"url": "https://github.com/n2geoff/mite/issues"
 	},
-	"main": "src/index.js",
 	"type": "module",
+	"main": "./src/mite.js",
+	"types": "./src/mite.d.ts",
+	"exports": {
+		".": {
+			"types": "./src/mite.d.ts",
+			"import": "./mite.js"
+		}
+	},
 	"scripts": {
 		"test": "bun test",
 		"test:watch": "bun test --watch",
