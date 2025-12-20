@@ -30,15 +30,23 @@ Give it a try
 
 ## Getting Started
 
-Just include `Mite JS` in your project folder and import it as a module:
+Just import `Mite JS` in your project
 
 ```js
-import { h, mount } from './mite.core.min.js';
+import { h, mount } from './mite.standard.min.js';
 ```
+You REALLY only need TWO functions
+
+1. Build components with either `h` or `html`
+2. Render app with either `mount` or `route`
+
+**Both** render options return a `store` that you can use, if needed, to integrate your data into a database or share with other libraries
+
+*That seriously reduces congnitive load!*
 
 ### Pick You Flavor
 
-Want more features, you have options
+Depending on your needs, there are a few variations, see below
 
 | Build                                  | Size* | Features                            |
 | -------------------------------------- | ----- | ----------------------------------- |
@@ -71,8 +79,6 @@ const Counter = (state, update) => h('div', { class: 'container' },
 
 mount('#app', Counter, { count: 0 });
 ```
-
-------
 
 ### 2. Todo List (Keys & Forms)
 
@@ -109,8 +115,6 @@ const TodoApp = (state, update) => {
 
 mount('#app', TodoApp, { todos: [] });
 ```
-
-------
 
 ### 3. SPA Router (Master/Detail)
 
@@ -179,6 +183,12 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 
 ```sh
 bun test
+```
+
+## Build
+
+```sh
+bun run build
 ```
 
 ## Support
