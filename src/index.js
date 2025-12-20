@@ -131,16 +131,10 @@ export const createElement = (vnode,isSVG = false) => {
  * @param {Object} [oldProps={}] - The previous properties for diffing.
  */
 export const patchProps = (el,newProps = {},oldProps = {}) => {
-    // update new props
-    for (let key in newProps) {
+    const all = { ...oldProps,...newProps };
+    for (let key in all) {
         if (newProps[key] !== oldProps[key]) {
             patchProp(el,key,newProps[key],oldProps[key]);
-        }
-    }
-    // remove old props
-    for (let key in oldProps) {
-        if (!(key in newProps)) {
-            patchProp(el,key,null,oldProps[key]);
         }
     }
 };
@@ -179,40 +173,23 @@ export const patchProp = (el,key,next,prev) => {
 export const patch = (parent,newNode,oldNode,index = 0) => {
     const target = parent.childNodes[index];
 
-    // remove nullish
-    if (newNode == null) {
-        return target && parent.removeChild(target);
-    }
+    if (newNode == null) {return target && parent.removeChild(target);}
+    if (!target) {return parent.appendChild(createElement(newNode));}
 
-    // create node if no target exists
-    if (!target) {
-        return parent.appendChild(createElement(newNode));
-    }
+    const isNewObj = typeof newNode === 'object';
+    const isOldObj = typeof oldNode === 'object';
 
-    // diff text
-    const isNewText = typeof newNode !== 'object';
-    const isOldText = typeof oldNode !== 'object';
-
-    if (
-        isNewText !== isOldText ||
-        (isNewText ? newNode !== oldNode : (newNode.tag !== oldNode.tag || newNode.props?.key !== oldNode.props?.key))
-    ) {
+    // if types, tags, or keys differ: replace
+    if (isNewObj !== isOldObj || (isNewObj && (newNode.tag !== oldNode.tag || newNode.props?.key !== oldNode.props?.key))) {
         return parent.replaceChild(createElement(newNode),target);
     }
 
-    // update existing node
-    if (!isNewText) {
+    if (isNewObj) {
         patchProps(target,newNode.props,oldNode.props);
-
-        const newChildren = newNode.children;
-        const oldChildren = oldNode.children;
-        const childParent = newNode.tag === 'fragment' ? parent : target;
-
-        const max = Math.max(newChildren.length,oldChildren.length);
-
-        for (let i = 0;i < max;i++) {
-            patch(childParent,newChildren[i],oldChildren[i],i);
-        }
+        const newC = newNode.children,oldC = oldNode.children;
+        const max = Math.max(newC.length,oldC.length);
+        const p = newNode.tag === 'fragment' ? parent : target;
+        for (let i = 0;i < max;i++) {patch(p,newC[i],oldC[i],i);}
     } else if (target.nodeValue !== newNode) {
         target.nodeValue = newNode;
     }
@@ -326,7 +303,7 @@ export const route = (selector,routes,state = {}) => {
                     if (match) {
                         component = routes[r];
                         const keys = r.match(/:[^\s/]+/g);
-                        keys.forEach((key,i) => params[key.substring(1)] = match[i + 1]);
+                        if(keys) {keys.forEach((key,i) => params[key.substring(1)] = match[i + 1]);}
                         break;
                     }
                 }
