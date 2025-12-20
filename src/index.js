@@ -206,9 +206,9 @@ export const patch = (parent,newNode,oldNode,index = 0) => {
 
         const newChildren = newNode.children;
         const oldChildren = oldNode.children;
-        const max = Math.max(newChildren.length,oldChildren.length);
-
         const childParent = newNode.tag === 'fragment' ? parent : target;
+
+        const max = Math.max(newChildren.length,oldChildren.length);
 
         for (let i = 0;i < max;i++) {
             patch(childParent,newChildren[i],oldChildren[i],i);
@@ -307,28 +307,25 @@ export const Link = (props,...children) => {
  */
 export const route = (selector,routes,state = {}) => {
     const container = document.querySelector(selector);
-    // prevents hydration issues
-    container.innerHTML = '';
-
     const store = isStore(state);
     let oldVNode = null;
 
     const render = () => {
-        // ignore anchor #
         const hash = window.location.hash;
-        if (hash && !hash?.startsWith("#/")) { return; }
+        // bypass anchor links
+        if (hash && !hash.startsWith("#/")) return;
 
-        const path = window.location.hash.slice(1) || '/';
+        const path = hash.slice(1) || '/';
         let component = routes[path],params = {};
 
         if (!component) {
-            for (const route in routes) {
-                if (route.includes(':')) {
-                    const RE = new RegExp(`^${route.replace(/:[^\s/]+/g,'([^/]+)')}$`);
+            for (const r in routes) {
+                if (r.includes(':')) {
+                    const RE = new RegExp(`^${r.replace(/:[^\s/]+/g,'([^/]+)')}$`);
                     const match = path.match(RE);
                     if (match) {
-                        component = routes[route];
-                        const keys = route.match(/:[^\s/]+/g);
+                        component = routes[r];
+                        const keys = r.match(/:[^\s/]+/g);
                         keys.forEach((key,i) => params[key.substring(1)] = match[i + 1]);
                         break;
                     }
@@ -339,7 +336,6 @@ export const route = (selector,routes,state = {}) => {
         const view = component || routes['404'];
         if (view) {
             const newVNode = view(store.getState(),store.update,params);
-            // We ALWAYS patch at index 0 because a SPA is one root component
             patch(container,newVNode,oldVNode,0);
             oldVNode = newVNode;
         }

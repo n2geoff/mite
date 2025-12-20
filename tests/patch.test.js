@@ -1,6 +1,6 @@
 import { expect,test,describe,beforeEach } from "bun:test";
 import { Window } from "happy-dom";
-import { html, patch } from "../src/index.js";
+import { html, patch, store } from "../src/index.js";
 
 // Setup the DOM environment
 const window = new Window();
@@ -81,5 +81,30 @@ describe("Mite - Patching",() => {
 
         // If keys work, these must be different DOM nodes
         expect(originalEl).not.toBe(newEl);
+    });
+
+    test("Keyed Correctness: Should update order correctly",() => {
+        const container = document.createElement("div");
+        const myStore = store({ items: [{ id: 1,text: "A" },{ id: 2,text: "B" }] });
+
+        const View = (state) => html`
+        <ul>
+            ${state.items.map(item => html`<li key="${item.id}">${item.text}</li>`)}
+        </ul>
+    `;
+
+        // Render 1
+        let oldV = View(myStore.getState());
+        patch(container,oldV);
+
+        // Render 2 (Shuffle)
+        myStore.update({ items: [{ id: 2,text: "B" },{ id: 1,text: "A" }] });
+        const newV = View(myStore.getState());
+        patch(container,newV,oldV);
+
+        const lis = container.querySelectorAll("li");
+        expect(lis[0].textContent).toBe("B");
+        expect(lis[1].textContent).toBe("A");
+        expect(lis.length).toBe(2);
     });
 });
