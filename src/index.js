@@ -5,7 +5,7 @@
 
 /**
  * Creates a virtual node (VNode).
- * 
+ *
  * @param {string} tag - The HTML tag or 'fragment'
  * @param {any} props - Attributes or the first child
  * @param {...any} children - Child VNodes or text content.
@@ -31,66 +31,61 @@ export const h = (tag, props, ...children) => {
  * @param {...any} values - The dynamic expressions in the template.
  * @returns {Object} A single VNode or a fragment.
  */
-export const html = (strings,...values) => {
-    const rawHtml = strings.reduce((acc,str,i) => {
+export const html = (strings, ...values) => {
+    const raw = strings.reduce((acc, str, i) => {
         const val = values[i];
-        let placeholder = "";
+        // We MUST use a string marker for the browser's innerHTML to work
+        const mark = (val != null && (typeof val === 'object' || typeof val === 'function'))
+            ? `__HV_${i}__`
+            : (val ?? "");
+        return acc + str + mark;
+    }, "");
 
-        if (val !== undefined && val !== null) {
-            if (Array.isArray(val)) {
-                placeholder = `__ARR_${i}__`;
-            } else if (typeof val === 'object' || typeof val === 'function') {
-                placeholder = `__VAL_${i}__`;
-            } else {
-                placeholder = val;
-            }
-        }
-        return acc + str + placeholder;
-    },"");
+    const tmpl = document.createElement('template');
+    tmpl.innerHTML = raw.trim();
 
-    const template = document.createElement('template');
-    template.innerHTML = rawHtml.trim();
-    const fragment = template.content;
-
-    const domToVNode = (node) => {
+    const walk = (node) => {
+        // text logic
         if (node.nodeType === 3) {
-            const text = node.textContent;
-            const arrMatch = text.match(/__ARR_(\d+)__/);
-            if (arrMatch) return values[parseInt(arrMatch[1])];
-            const valMatch = text.match(/__VAL_(\d+)__/);
-            if (valMatch) return values[parseInt(valMatch[1])];
-            return text;
+            const txt = node.textContent;
+
+            // kill whitespace
+            if (!txt.trim()) return null;
+
+            const parts = txt.split(/(__HV_\d+__)/g)
+                .filter(Boolean)
+                .map(part => {
+                    const match = part.match(/__HV_(\d+)__/);
+                    return match ? values[parseInt(match[1])] : part;
+                });
+
+            // returns single value or array
+            return parts.length === 1 ? parts[0] : parts;
         }
 
+        // element logic
         if (node.nodeType === 1) {
             const props = {};
-            const tag = node.tagName.toLowerCase();
+            for (let attr of node.attributes) {
+                const match = attr.value.match(/__HV_(\d+)__/);
+                props[attr.name === 'class' ? 'class' : attr.name] = match
+                    ? values[match[1]]
+                    : attr.value;
+            }
 
-            Array.from(node.attributes).forEach(attr => {
-                const name = attr.name;
-                let val = attr.value;
-                const valMatch = val.match(/__VAL_(\d+)__/);
-
-                if (valMatch) {
-                    val = values[parseInt(valMatch[1])];
-                }
-
-                props[name === 'class' ? 'class' : name] = val;
-            });
-
+            // strip out empty/whitespace
             const children = Array.from(node.childNodes)
-                .map(domToVNode)
-                .flat()
-                .filter(c => c !== null);
+                .map(walk)
+                .filter(c => c && (typeof c !== 'string' || c.trim()));
 
-            return h(tag,props,...children);
+            return h(node.tagName.toLowerCase(),props,...children);
         }
-        return null;
     };
 
-    return fragment.childNodes.length === 1
-        ? domToVNode(fragment.firstChild)
-        : h('fragment',{},...Array.from(fragment.childNodes).map(domToVNode).flat());
+    const frag = tmpl.content;
+    return frag.childNodes.length === 1
+        ? walk(frag.firstChild)
+        : h('fragment',null,...Array.from(frag.childNodes).map(walk));
 };
 
 /**
