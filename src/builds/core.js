@@ -1,1 +1,1 @@
-export { h,mount,store,patch,patchProps,createElement,isStore } from "../index.js";
+export { h,mount,store,patch,patchProps,patchProp,createElement,isStore } from "../index.js";

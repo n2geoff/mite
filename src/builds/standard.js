@@ -4,6 +4,7 @@ export {
     store,
     isStore,
     patch,
+    patchProp,
     patchProps,
     createElement,
     route,

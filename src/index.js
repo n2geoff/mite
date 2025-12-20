@@ -89,41 +89,6 @@ export const html = (strings, ...values) => {
 };
 
 /**
- * Synchronizes DOM attributes, styles, and event listeners.
- *
- * @param {HTMLElement} el - The target DOM element.
- * @param {Object} newProps - The updated properties.
- * @param {Object} [oldProps={}] - The previous properties for diffing.
- */
-export const patchProps = (el,newProps,oldProps = {}) => {
-    if (!el || el.nodeType !== 1) return;
-    const allProps = { ...oldProps,...newProps };
-    for (let key in allProps) {
-        const next = newProps[key];
-        const prev = oldProps[key];
-        if (next === prev || key === 'key' || key === 'oncreate') continue;
-
-        if (key.startsWith('on')) {
-            const name = key.substring(2).toLowerCase();
-            if (prev) el.removeEventListener(name,prev);
-            if (next) el.addEventListener(name,next);
-        } else if (key === 'style' && typeof next === 'object') {
-            Object.assign(el.style,next);
-        } else if (key === 'value' || key === 'checked' || key === 'selected') {
-            el[key] = next;
-        } else {
-            const name = (key === 'className') ? 'class' : key;
-            // BOOLEAN FIX: If the value is falsy, remove the attribute entirely
-            if (next === false || next == null) {
-                el.removeAttribute(name);
-            } else {
-                el.setAttribute(name,next === true ? '' : next);
-            }
-        }
-    }
-};
-
-/**
  * Transforms a VNode into a real DOM element or Text node.
  * Supports SVG namespaces and 'oncreate' lifecycle hooks.
  *
@@ -132,31 +97,75 @@ export const patchProps = (el,newProps,oldProps = {}) => {
  * @returns {Node} The resulting DOM element or text node.
  */
 export const createElement = (vnode,isSVG = false) => {
-    if (typeof vnode === 'string' || typeof vnode === 'number') {
+    if (typeof vnode !== 'object') {
         return document.createTextNode(vnode);
     }
 
     if (vnode.tag === 'fragment') {
         const frag = document.createDocumentFragment();
-        vnode.children.forEach(child => frag.appendChild(createElement(child,isSVG)));
+        vnode.children.forEach(c => frag.appendChild(createElement(c,isSVG)));
         return frag;
     }
 
-    // SVG support
     const svgMode = isSVG || vnode.tag === 'svg';
     const el = svgMode
         ? document.createElementNS("http://www.w3.org/2000/svg",vnode.tag)
         : document.createElement(vnode.tag);
 
     patchProps(el,vnode.props);
-    vnode.children.forEach(child => el.appendChild(createElement(child,svgMode)));
 
-    // oncreate lifecycle Hook
+    vnode.children.forEach(c => el.appendChild(createElement(c,svgMode)));
+
     if (vnode.props?.oncreate) {
-        setTimeout(() => vnode.props.oncreate(el),0);
+        setTimeout(() => vnode.props.oncreate(el));
     }
 
     return el;
+};
+
+/**
+ * Synchronizes DOM attributes, styles, and event listeners.
+ *
+ * @param {HTMLElement} el - The target DOM element.
+ * @param {Object} newProps - The updated properties.
+ * @param {Object} [oldProps={}] - The previous properties for diffing.
+ */
+export const patchProps = (el,newProps = {},oldProps = {}) => {
+    // update new props
+    for (let key in newProps) {
+        if (newProps[key] !== oldProps[key]) {
+            patchProp(el,key,newProps[key],oldProps[key]);
+        }
+    }
+    // remove old props
+    for (let key in oldProps) {
+        if (!(key in newProps)) {
+            patchProp(el,key,null,oldProps[key]);
+        }
+    }
+};
+
+export const patchProp = (el,key,next,prev) => {
+    if (key.startsWith('on')) {
+        const name = key.slice(2).toLowerCase();
+        if (prev) el.removeEventListener(name,prev);
+        if (next) el.addEventListener(name,next);
+    } else if (key === 'style') {
+        if (typeof next === 'string') {
+            el.style.cssText = next;
+        } else {
+            // Reset styles before applying object to prevent property bleeding
+            el.style.cssText = '';
+            if (next) Object.assign(el.style,next);
+        }
+    } else if (key in el && key !== 'list' && key !== 'form') {
+        // Handle value, checked, selected directly
+        el[key] = next == null ? '' : next;
+    } else if (next == null || next === false) {
+        el.removeAttribute(key);
+    } else {
+        el.setAttribute(key,next === true ? '' : next);
+    }
 };
 
 /**
@@ -168,52 +177,44 @@ export const createElement = (vnode,isSVG = false) => {
  * @param {number} [index=0] - The child index in the parent.
  */
 export const patch = (parent,newNode,oldNode,index = 0) => {
-    if (!parent) return;
     const target = parent.childNodes[index];
 
-    if (newNode === undefined) {
-        if (target) parent.removeChild(target);
-        return;
+    // remove nullish
+    if (newNode == null) {
+        return target && parent.removeChild(target);
     }
 
+    // create node if no target exists
     if (!target) {
-        parent.appendChild(createElement(newNode));
-        return;
+        return parent.appendChild(createElement(newNode));
     }
 
-    // strict node check
-    const isNewText = typeof newNode === 'string' || typeof newNode === 'number';
-    const isOldText = typeof oldNode === 'string' || typeof oldNode === 'number';
+    // diff text
+    const isNewText = typeof newNode !== 'object';
+    const isOldText = typeof oldNode !== 'object';
 
-    if (isNewText || isOldText) {
-        if (newNode !== oldNode) {
-            if (isNewText && isOldText && target.nodeType === 3) {
-                target.nodeValue = newNode;
-            } else {
-                parent.replaceChild(createElement(newNode),target);
-            }
-        }
-        return;
+    if (
+        isNewText !== isOldText ||
+        (isNewText ? newNode !== oldNode : (newNode.tag !== oldNode.tag || newNode.props?.key !== oldNode.props?.key))
+    ) {
+        return parent.replaceChild(createElement(newNode),target);
     }
 
-    if (newNode.tag !== oldNode?.tag || newNode.props?.key !== oldNode?.props?.key) {
-        parent.replaceChild(createElement(newNode),target);
-        return;
-    }
+    // update existing node
+    if (!isNewText) {
+        patchProps(target,newNode.props,oldNode.props);
 
-    if (newNode.tag) {
-        if (newNode.tag !== 'fragment') {
-            patchProps(target,newNode.props,oldNode?.props || {});
-        }
-
-        const newChildren = newNode.children || [];
-        const oldChildren = oldNode?.children || [];
+        const newChildren = newNode.children;
+        const oldChildren = oldNode.children;
         const max = Math.max(newChildren.length,oldChildren.length);
+
         const childParent = newNode.tag === 'fragment' ? parent : target;
 
         for (let i = 0;i < max;i++) {
             patch(childParent,newChildren[i],oldChildren[i],i);
         }
+    } else if (target.nodeValue !== newNode) {
+        target.nodeValue = newNode;
     }
 };
 
