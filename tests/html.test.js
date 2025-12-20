@@ -8,7 +8,7 @@ global.document = window.document;
 global.window   = window;
 global.Node     = window.Node;
 
-describe("Mite JS - html parser", () => {
+describe("Mite - html parser", () => {
 
     test("basic: simple string template", () => {
         const vnode = html`<div>Hello World</div>`;

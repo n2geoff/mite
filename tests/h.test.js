@@ -1,8 +1,8 @@
 import { expect, test, describe } from "bun:test";
 import { h } from "../src/index.js";
 
-describe("HyperDrive.js - h() function", () => {
-    
+describe("Mite - h() function", () => {
+
     test("standard: h(tag, props, children)", () => {
         const vnode = h("div", { id: "foo" }, "Hello");
         expect(vnode.tag).toBe("div");

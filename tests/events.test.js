@@ -5,7 +5,7 @@ import { html,patch } from "../src/index.js";
 const window = new Window();
 global.document = window.document;
 
-describe("Mite.js - Events & Lifecycles",() => {
+describe("Mite - Events & Lifecycles",() => {
     let container;
 
     beforeEach(() => {

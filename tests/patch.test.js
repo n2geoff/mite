@@ -6,7 +6,7 @@ import { html, patch } from "../src/index.js";
 const window = new Window();
 global.document = window.document;
 
-describe("Mite.js - Style Patching",() => {
+describe("Mite - Patching",() => {
     let container;
 
     beforeEach(() => {

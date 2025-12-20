@@ -8,7 +8,7 @@ global.document = window.document;
 global.window   = window;
 global.Node     = window.Node;
 
-describe("Mite JS",() => {
+describe("Mite",() => {
 
     beforeEach(() => {
         document.body.innerHTML = '<div id="app"></div>';
