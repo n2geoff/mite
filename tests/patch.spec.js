@@ -69,4 +69,17 @@ describe("Mite.js - Style Patching",() => {
         const el = container.firstChild;
         expect(el.getAttribute("style")).toBe("");
     });
+
+    test("keyed reconciliation: should replace element if key changes",() => {
+        const oldVnode = html`<div key="a"></div>`;
+        patch(container,oldVnode);
+        const originalEl = container.firstChild;
+
+        const newVnode = html`<div key="b"></div>`;
+        patch(container,newVnode,oldVnode);
+        const newEl = container.firstChild;
+
+        // If keys work, these must be different DOM nodes
+        expect(originalEl).not.toBe(newEl);
+    });
 });
