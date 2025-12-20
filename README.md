@@ -43,7 +43,7 @@ Want more features, you have options
 | Build                                  | Size* | Features                            |
 | -------------------------------------- | ----- | ----------------------------------- |
 | [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `store` |
-| [Standard](/dist/mite.standard.min.js) | ~3KB  | adds `router`, `navigate`, `Link`   |
+| [Standard](/dist/mite.standard.min.js) | ~3KB  | adds `route`, `navigate`, `Link`   |
 | [Full](/dist/mite.full.min.js)         | ~4KB  | adds `html` tagged templates for UI |
 
 > \* Minified Size
@@ -114,10 +114,10 @@ mount('#app', TodoApp, { todos: [] });
 
 ### 3. SPA Router (Master/Detail)
 
-Mite shines when building multi-page interfaces. The `router` passes `params` (like `:id`) directly to your views
+Mite shines when building multi-page interfaces. The `route` passes `params` (like `:id`) directly to your views
 
 ```js
-import { h, router, Link } from '../dist/mite.standard.min.js';
+import { h, route, Link } from '../dist/mite.standard.min.js';
 
 // Master View
 const Home = (state) => h('div', {},
@@ -153,7 +153,7 @@ const state = {
   ]
 };
 
-router('#app', routes, state);
+route('#app', routes, state);
 ```
 
 ## Why Hyperscript
@@ -169,7 +169,7 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 | -------------| ------------------ |
 | `h(tag, props, ...children)`      | Hyperscript style UI component. Returns DOM. |
 | `mount(selector, view, state)`    | Mounts a component to a DOM element. Returns a store.       |
-| `router(selector, routes, state)` | Mounts & Initializes hash-based routing. Returns a store.   |
+| `route(selector, routes, state)` | Mounts & Initializes hash-based routing. Returns a store.   |
 | `store(initial, logger)`    | Creates a standalone reactive store.                        |
 | `Link(props, ...children)`        | Helper for `<a>` tags. Auto-adds `#` and `active` class.    |
 | `navigate(path)`                  | Programmatically changes the route.                         |

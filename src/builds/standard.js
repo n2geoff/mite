@@ -6,7 +6,7 @@ export {
     patch,
     patchProps,
     createElement,
-    router,
+    route,
     navigate,
     Link
 } from "../index.js";

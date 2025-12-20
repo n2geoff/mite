@@ -303,7 +303,7 @@ export const Link = (props,...children) => {
  * @param {Object} [state={}] - Initial state or an existing Store instance.
  * @returns {Object} The store instance used by the router.
  */
-export const router = (selector,routes,state = {}) => {
+export const route = (selector,routes,state = {}) => {
     const container = document.querySelector(selector);
     // prevents hydration issues
     container.innerHTML = '';

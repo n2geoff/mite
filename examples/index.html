@@ -12,7 +12,7 @@
         <div id="app"></div>
     </main>
     <script type="module">
-        import { h,router,Link,navigate } from '../dist/mite.full.min.js';
+        import { h,route,Link,navigate } from '../dist/mite.full.min.js';
         import {Counter} from "./components/Counter.js";
         import {Todo} from "./components/Todo.js";
 
@@ -103,7 +103,7 @@
             todos: []
         };
 
-        router('#app',routes, state);
+        route('#app',routes, state);
     </script>
 </body>
 </html>
