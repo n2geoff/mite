@@ -1,0 +1,27 @@
+{
+	"name": "mite",
+	"version": "1.0.0",
+	"description": "a minimal client-side web application library",
+	"author": "Geoff Doty",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/n2geoff/mite/issues"
+	},
+	"main": "src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./core": "./src/core.js",
+		"./router": "./src/router.js",
+		"./html": "./src/html.js"
+	},
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"test:watch": "bun test --watch",
+		"build": "bun ./build.js"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"happy-dom": "^20.0.11"
+	}
+}
