@@ -1,12 +1,6 @@
 import { expect, test, describe, beforeAll } from "bun:test";
 import { Window } from "happy-dom";
-import { html, h } from "../src/index.js";
-
-// Setup the DOM environment
-const window    = new Window();
-global.document = window.document;
-global.window   = window;
-global.Node     = window.Node;
+import { html } from "../src/mite.js";
 
 describe("Mite - html parser", () => {
 

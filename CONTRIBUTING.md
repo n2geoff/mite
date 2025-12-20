@@ -23,7 +23,7 @@ You may contribute in several ways like:
 
 ## Developing
 
-There is only one main source file. It is the [/src/index.js](/src/index.js).
+There is only one main source file. It is the [/src/mite.js](/src/mite.js).
 The [tests/mite.spec.js](tests/mite.test.js) is for now the only unit test file in the project.
 
 The `dist` includes the minified versions of different builds of the source code.

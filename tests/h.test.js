@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { h } from "../src/index.js";
+import { h } from "../src/mite.js";
 
 describe("Mite - h() function", () => {
 

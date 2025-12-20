@@ -4,7 +4,7 @@ const BANNER = `/* Mite.js v${VERSION} | MIT License | https://github.com/n2geof
 const flavors = [
     { name: "core",entry: "./src/builds/core.js" },
     { name: "standard",entry: "./src/builds/standard.js" },
-    { name: "full",entry: "./src/index.js" }
+    { name: "full",entry: "./src/mite.js" }
 ];
 
 async function build() {

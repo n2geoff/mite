@@ -10,4 +10,4 @@ export {
     route,
     navigate,
     Link
-} from "../index.js";
+} from "../mite.js";

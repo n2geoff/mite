@@ -1,4 +1,4 @@
-import { h } from "../../src/index.js";
+import { h } from "../../src/mite.js";
 
 export const Todo = (state,update) => {
 

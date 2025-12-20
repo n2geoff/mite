@@ -1,4 +1,4 @@
-import {h} from "../../src/index.js";
+import {h} from "../../src/mite.js";
 
 export const Counter = (state,update) => h('article',{ style: {}}, [
     h("header", {}, [
