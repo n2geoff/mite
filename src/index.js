@@ -139,6 +139,15 @@ export const patchProps = (el,newProps = {},oldProps = {}) => {
     }
 };
 
+/**
+ * Synchronizes a single property/attribute between the VNode and the real DOM.
+ * Handles event delegation, style objects/strings, and boolean attributes.
+ *
+ * @param {HTMLElement} el - The target DOM element.
+ * @param {string} key - The property name (e.g., 'class', 'onclick', 'style').
+ * @param {any} next - The new value to apply.
+ * @param {any} prev - The previous value for diffing and cleanup.
+ */
 export const patchProp = (el,key,next,prev) => {
     if (key.startsWith('on')) {
         const name = key.slice(2).toLowerCase();
