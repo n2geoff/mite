@@ -5,17 +5,23 @@
 
 /**
  * Creates a virtual node (VNode).
- *
- * @param {string} tag - The HTML tag name or 'fragment'.
- * @param {Object} [props={}] - Attributes, event listeners, and lifecycle hooks.
- * @param {...(Object|string|number)} children - Child VNodes or text content.
+ * 
+ * @param {string} tag - The HTML tag or 'fragment'
+ * @param {any} props - Attributes or the first child
+ * @param {...any} children - Child VNodes or text content.
  * @returns {Object} The VNode representation.
  */
-export const h = (tag,props = {},...children) => ({
-    tag: tag || 'fragment',
-    props: props || {},
-    children: children.flat().filter(c => c !== null && c !== undefined && c !== false)
-});
+export const h = (tag, props, ...children) => {
+    const isProp = props && typeof props === 'object' && !props.flat && !props.tag;
+
+    return {
+        tag: tag || 'fragment',
+        props: isProp ? props : {},
+        children: (isProp ? children : [props, ...children])
+            .flat(Infinity)
+            .filter(v => v != null && v !== false && v !== '')
+    };
+};
 
 /**
  * Parses a tagged template literal into a VNode tree.
