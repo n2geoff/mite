@@ -37,7 +37,7 @@ import { h, mount } from './mite.standard.min.js';
 ```
 You REALLY only need TWO functions
 
-1. Build components with either `h` or `html`
+1. Build components with `h`
 2. Render app with either `mount` or `route`
 
 **Both** render options return a `store` that you can use, if needed, to integrate your data into a database or share with other libraries
@@ -52,7 +52,7 @@ Depending on your needs, there are a few variations, see below
 | -------------------------------------- | ----- | ----------------------------------- |
 | [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `store` |
 | [Standard](/dist/mite.standard.min.js) | ~3KB  | adds `route`, `navigate`, `Link`   |
-| [Full](/dist/mite.full.min.js)         | ~4KB  | adds `html` tagged templates for UI |
+
 
 > \* Minified Size
 
@@ -162,9 +162,7 @@ route('#app', routes, state);
 
 ## Why Hyperscript
 
-It provides the smallest foot-print, requires no build step, still quite readable, and can easily be extend to support `html` via string literials.
-
-> SEE:  `dist/mite.full.min.js` for an `html` alternative to `h`
+It provides the smallest foot-print, requires no build step, still quite readable.
 
 
 ## API Reference
@@ -177,7 +175,6 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 | `store(initial, logger)`    | Creates a standalone reactive store.                        |
 | `Link(props, ...children)`        | Helper for `<a>` tags. Auto-adds `#` and `active` class.    |
 | `navigate(path)`                  | Programmatically changes the route.                         |
-| `html` | Write UI using Tagged-Template-Literal alternate to `h`  |
 
 ## Test
 

@@ -1,6 +1,7 @@
 import { expect,test,describe,beforeEach,spyOn } from "bun:test";
 import { Window } from "happy-dom";
-import { html,patch } from "../src/mite.js";
+import { patch } from "../src/mite.js";
+import { html} from "../src/html.js";
 
 const window = new Window();
 global.document = window.document;

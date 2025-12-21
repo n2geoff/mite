@@ -1,6 +1,6 @@
 import { expect, test, describe, beforeAll } from "bun:test";
 import { Window } from "happy-dom";
-import { html } from "../src/mite.js";
+import { html } from "../src/html.js";
 
 describe("Mite - html parser", () => {
 

@@ -26,9 +26,6 @@ export function h(tag: string,props: Record<string, any> | null,...children: any
 export function h(tag: string,...children: any[]): VNode;
 export function h(tag: string): VNode;
 
-/** Parses a tagged template literal into a VNode tree */
-export function html(strings: TemplateStringsArray, ...values: any[]): VNode;
-
 /** Synchronizes DOM attributes, styles, and event listeners */
 export function patchProps(el: HTMLElement, newProps: object, oldProps?: object): void;
 
