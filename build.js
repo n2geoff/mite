@@ -2,13 +2,21 @@ const VERSION = "1.0.0";
 const BANNER = `/* Mite.js v${VERSION} | MIT License | https://github.com/n2geoff/mite */\n`;
 
 const flavors = [
-    { name: "core",entry: "./src/builds/core.js" },
-    { name: "standard",entry: "./src/mite.js" }
+    { name: "core", entry: "./src/builds/core.js" },
+    { name: "", entry: "./src/builds/standard.js"},
+
 ];
 
 async function build() {
     for (const flavor of flavors) {
-        const filename = `mite.${flavor.name}.min.js`;
+        let filename = "";
+
+        if(flavor.name) {
+            filename = `mite.${flavor.name}.min.js`;
+        } else {
+            filename = "mite.min.js";
+        }
+
         const outpath = `./dist/${filename}`;
 
         const result = await Bun.build({
