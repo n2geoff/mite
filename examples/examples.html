@@ -15,34 +15,48 @@
                 <li><strong>Examples</strong></li>
             </ul>
             <ul>
-                <li><a href="/examples">Home</a></li>
+                <li><a href="/examples/examples.html">Home</a></li>
+                <li><a href="#/converter">Converter</a></li>
                 <li><a href="#/counter">Counter</a></li>
                 <li><a href="#/todo">Todo</a></li>
+                <li><a href="#/users">Users</a></li>
             </ul>
         </nav>
         <div id="app"></div>
     </main>
     <script type="module">
-        import { h,route } from "../src/mite.js";
+        import { h,route, signal } from "../src/mite.js";
         import { Counter } from "./components/Counter.js";
         import { Todo } from "./components/Todo.js";
+        import { UsersPage } from "./pages/UsersPage.js";
+        import { TranspilerTool } from "./pages/ConverterPage.js";
+        import { Test} from "./components/Test.js";
 
         function App(state, update) {
-            return h("section", {class: "grid"}, [
-                Counter(state, update),
-                Todo(state, update)
+            return h("div", [
+                h("section",{ class: "grid" },[
+                    Counter(state, update),
+                    Todo(state, update)
+                ]),
+                h("section", [
+                    Test(state,update)
+                ])
             ]);
         }
 
         const routes = {
             "/": App,
+            "/converter": TranspilerTool,
             "/counter": Counter,
-            "/todo": Todo
+            "/todo": Todo,
+            "/users": UsersPage
         };
 
         const state = {
             count: 0,
-            todos: []
+            todos: [],
+            loading: false,
+            results: []
         }
 
         route("#app", routes, state);
