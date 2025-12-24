@@ -1,6 +1,6 @@
 import { expect,test,describe,beforeEach } from "bun:test";
 import { Window } from "happy-dom";
-import { patch, store } from "../src/mite.js";
+import { patch, signal } from "../src/mite.js";
 import { html } from "../src/html.js";
 
 // Setup the DOM environment
@@ -86,7 +86,7 @@ describe("Mite - Patching",() => {
 
     test("Keyed Correctness: Should update order correctly",() => {
         const container = document.createElement("div");
-        const myStore = store({ items: [{ id: 1,text: "A" },{ id: 2,text: "B" }] });
+        const myStore = signal({ items: [{ id: 1,text: "A" },{ id: 2,text: "B" }] });
 
         const View = (state) => html`
         <ul>

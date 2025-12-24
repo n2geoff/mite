@@ -1,8 +1,8 @@
 export {
     h,
     mount,
-    store,
-    isStore,
+    signal,
+    asSignal,
     patch,
     patchProp,
     patchProps,

@@ -1,1 +1,1 @@
-export { h,mount,store,patch,patchProps,patchProp,createElement,isStore } from "../mite.js";
+export { h,mount,signal,patch,patchProps,patchProp,createElement,asSignal } from "../mite.js";

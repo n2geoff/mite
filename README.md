@@ -22,7 +22,7 @@ Give it a try
 
 - **Minimalist Core**: ~2KB minified.
 - **Hyperscript Syntax**: Fast, readable component building.
-- **Reactive State**: Built-in global store with a simple `.update()` API.
+- **Reactive State**: Built-in global signal with a simple `.update()` API.
 - **Smart Patching VDOM**: Key-aware diffing and robust Fragment support.
 - **Parametric Hash Router**: Support for dynamic routes (e.g., `/user/:id`).
 - **Build Variation**: From core-to-full featured your choice.
@@ -40,7 +40,7 @@ You REALLY only need TWO functions
 1. Build components with `h`
 2. Render app with either `mount` or `route`
 
-**Both** render options return a `store` that you can use, if needed, to integrate your data into a database or share with other libraries
+**Both** render options return a `signal` that you can use, if needed, to integrate your data into a database or share with other libraries
 
 *That seriously reduces congnitive load!*
 
@@ -50,8 +50,8 @@ Depending on your needs, there are a few variations, see below
 
 | Build                                  | Size* | Features                            |
 | -------------------------------------- | ----- | ----------------------------------- |
-| [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `store` |
-| [Standard](/dist/mite.standard.min.js) | ~3KB  | adds `route`, `navigate`, `Link`   |
+| [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `signal` |
+| [Standard](/dist/mite.min.js) | ~3KB  | adds `route`, `navigate`, `Link`   |
 
 
 > \* Minified Size
@@ -121,7 +121,7 @@ mount('#app', TodoApp, { todos: [] });
 Mite shines when building multi-page interfaces. The `route` passes `params` (like `:id`) directly to your views
 
 ```js
-import { h, route, Link } from '../dist/mite.standard.min.js';
+import { h, route, Link } from '../dist/mite.min.js';
 
 // Master View
 const Home = (state) => h('div', {},
@@ -170,9 +170,9 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 | **Function** | **Description**    |
 | -------------| ------------------ |
 | `h(tag, props, ...children)`      | Hyperscript style UI component. Returns DOM. |
-| `mount(selector, view, state)`    | Mounts a component to a DOM element. Returns a store.       |
-| `route(selector, routes, state)` | Mounts & Initializes hash-based routing. Returns a store.   |
-| `store(initial, logger)`    | Creates a standalone reactive store.                        |
+| `mount(selector, view, state)`    | Mounts a component to a DOM element. Returns a signal.       |
+| `route(selector, routes, state)` | Mounts & Initializes hash-based routing. Returns a signal.   |
+| `signal(initial, log = false)`    | Creates a standalone reactive signal.                        |
 | `Link(props, ...children)`        | Helper for `<a>` tags. Auto-adds `#` and `active` class.    |
 | `navigate(path)`                  | Programmatically changes the route.                         |
 

@@ -15,7 +15,7 @@ export interface VNode {
 export type UpdateFn<S> = (next: Partial<S>) => void;
 export type ViewFn<S> = (state: S, update: UpdateFn<S>, params?: Record<string, string>) => VNode;
 
-export interface Store<S> {
+export interface Signal<S> {
     getState: () => S;
     update: UpdateFn<S>;
     subscribe: (fn: (state: S) => void) => number;
@@ -36,13 +36,13 @@ export function createElement(vnode: VNodeChild, ns?: string): Node;
 export function patch(parent: HTMLElement | DocumentFragment, newNode: VNodeChild, oldNode?: VNodeChild, index?: number): void;
 
 /** Creates a reactive state container */
-export function store<S>(initState: S, logger?: boolean): Store<S>;
+export function signal<S>(initState: S, logger?: boolean): S<S>;
 
 /** Mounts a reactive view to a DOM selector */
-export function mount<S>(selector: string, view: ViewFn<S>, state?: S | Store<S>): Store<S>;
+export function mount<S>(selector: string, view: ViewFn<S>, state?: S | Signal<S>): Signal<S>;
 
 /** Initializes a parametric hash-based router */
-export function route<S>(selector: string, routes: Record<string, ViewFn<S>>, state?: S | Store<S>): Store<S>;
+export function route<S>(selector: string, routes: Record<string, ViewFn<S>>, state?: S | Signal<S>): Signal<S>;
 
 /** Updates browser's hash location for navigation */
 export function navigate(path: string): void;
