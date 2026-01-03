@@ -133,7 +133,9 @@ export const patch = (parent,newNode,oldNode,index = 0) => {
         const newC = newNode.children,oldC = oldNode.children;
         const max = Math.max(newC.length,oldC.length);
         const p = newNode.tag === 'fragment' ? parent : target;
-        for (let i = 0;i < max;i++) {patch(p,newC[i],oldC[i],i);}
+        for (let i = 0; i < max; i++) { 
+            patch(p, newC[i], oldC[i], i >= newC.length ? newC.length : i); 
+        }
     } else if (target.nodeValue !== newNode) {
         target.nodeValue = newNode;
     }
