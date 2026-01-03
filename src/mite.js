@@ -124,7 +124,7 @@ export const patch = (parent,newNode,oldNode,index = 0) => {
     const isOldObj = typeof oldNode === 'object';
 
     // if types, tags, or keys differ: replace
-    if (isNewObj !== isOldObj || (isNewObj && (newNode.tag !== oldNode.tag || newNode.props?.key !== oldNode.props?.key))) {
+    if (isNewObj !== isOldObj || (isNewObj && (newNode?.tag !== oldNode?.tag || newNode.props?.key !== oldNode.props?.key))) {
         return parent.replaceChild(createElement(newNode),target);
     }
 
