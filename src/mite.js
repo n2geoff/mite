@@ -6,12 +6,17 @@
 /**
  * Creates a virtual node (VNode).
  *
- * @param {string} tag - The HTML tag or 'fragment'
+ * @param {string|function} tag - The HTML tag (or 'fragment') or 'function'
  * @param {any} props - Attributes or the first child
  * @param {...any} children - Child VNodes or text content.
  * @returns {Object} The VNode representation.
  */
 export const h = (tag, props, ...children) => {
+    if (typeof tag === 'function') {
+        return tag({ ...props, children: children.flat(Infinity) });
+    }
+
+    // props (optional)
     const isProp = props && typeof props === 'object' && !props.flat && !props.tag;
 
     return {
