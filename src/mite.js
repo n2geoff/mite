@@ -209,7 +209,7 @@ export const mount = (selector, { view, routes, state = {} }) => {
                             component = routes[r];
                             const keys = r.match(/:[^\s/]+/g);
                             if (keys) {
-                                keys.forEach((key, i) => params[key.substring(1)] = match[i + 1]);
+                                keys.forEach((key, i) => ctx.params[key.substring(1)] = match[i + 1]);
                             }
                             break;
                         }
