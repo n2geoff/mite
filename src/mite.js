@@ -153,7 +153,7 @@ export const patch = (parent,newNode,oldNode,index = 0) => {
  * @param {boolean} [logger=false] - Whether to log state updates to the console.
  * @returns {Object} An object containing getState, update, and subscribe methods.
  */
-export const signal = (initState,logger = false) => {
+export const signal = (initState, logger = false) => {
     let state = { ...initState };
     const listeners = [];
     return {
@@ -167,80 +167,69 @@ export const signal = (initState,logger = false) => {
     };
 };
 
-
-export const asSignal = (state) => (state?.subscribe ? state : signal(state || {}));
-
 /**
- * Mounts a reactive view to a DOM selector.
- *
+ * Mounts a reactive view or router to a DOM selector.
+ * 
  * @param {string} selector - The CSS selector for the root element.
- * @param {Function} view - A function (state, update) returning a VNode.
- * @param {Object} [state={}] - Initial state or an existing signal instance.
+ * @param {Object} options - Configuration options.
+ * @param {Function} [options.view] - A single view function (state, update).
+ * @param {Object.<string, Function>} [options.routes] - A mapping of paths to view functions.
+ * @param {Object} [options.state={}] - Initial state or an existing signal instance.
+ * 
  * @returns {Object} The signal instance used by the application.
  */
-export const mount = (selector,view,state = {}) => {
+export const mount = (selector, { view, routes, state = {} }) => {
     const container = document.querySelector(selector);
-    const signal = asSignal(state);
+    const data = state?.subscribe ? state : signal(state || {});
     let oldVNode = null;
 
     const render = () => {
-        const newVNode = view(signal.getState(),signal.update);
-        patch(container,newVNode,oldVNode,0);
-        oldVNode = newVNode;
-    };
+        const ctx = {
+            state: data.getState(),
+            update: data.update,
+            params: {},
+            content: null
+        };
 
-    signal.subscribe(render);
-    render();
-    return signal;
-};
+        if (routes) {
+            const hash = window.location.hash;
+            const path = (hash && hash.startsWith("#/")) ? hash.slice(1) : '/';
+            let component = routes[path];
 
-/**
- * Initializes a parametric hash-based router.
- * Matches routes to components and passes URL parameters.
- *
- * @param {string} selector - The CSS selector for the router outlet.
- * @param {Object.<string, Function>} routes - A mapping of paths to view functions.
- * @param {Object} [state={}] - Initial state or an existing signal instance.
- * @returns {Object} The signal instance used by the router.
- */
-export const route = (selector,routes,state = {}) => {
-    const container = document.querySelector(selector);
-    const signal = asSignal(state);
-    let oldVNode = null;
-
-    const render = () => {
-        const hash = window.location.hash;
-        // bypass anchor links
-        if (hash && !hash.startsWith("#/")) return;
-
-        const path = hash.slice(1) || '/';
-        let component = routes[path],params = {};
-
-        if (!component) {
-            for (const r in routes) {
-                if (r.includes(':')) {
-                    const RE = new RegExp(`^${r.replace(/:[^\s/]+/g,'([^/]+)')}$`);
-                    const match = path.match(RE);
-                    if (match) {
-                        component = routes[r];
-                        const keys = r.match(/:[^\s/]+/g);
-                        if(keys) {keys.forEach((key,i) => params[key.substring(1)] = match[i + 1]);}
-                        break;
+            if (!component) {
+                for (const r in routes) {
+                    if (r.includes(':')) {
+                        const RE = new RegExp(`^${r.replace(/:[^\s/]+/g, '([^/]+)')}$`);
+                        const match = path.match(RE);
+                        if (match) {
+                            component = routes[r];
+                            const keys = r.match(/:[^\s/]+/g);
+                            if (keys) {
+                                keys.forEach((key, i) => params[key.substring(1)] = match[i + 1]);
+                            }
+                            break;
+                        }
                     }
                 }
             }
+            
+            const activeView = component || routes['404'];
+            if (activeView) {
+                ctx.content = activeView(ctx);
+            }
         }
 
-        const view = component || routes['404'];
-        if (view) {
-            const newVNode = view(signal.getState(),signal.update,params);
-            patch(container,newVNode,oldVNode,0);
-            oldVNode = newVNode;
+        // handle layout (view) content
+        const finalVNode = view ? view(ctx) : ctx.content;
+
+        if (finalVNode) {
+            patch(container, finalVNode, oldVNode, 0);
+            oldVNode = finalVNode;
         }
     };
 
-    signal.subscribe(render);
-    window.addEventListener('hashchange',render);
+    data.subscribe(render);
+    if (routes) window.addEventListener('hashchange', render);
     render();
-    return signal;
+    return data;
 };
