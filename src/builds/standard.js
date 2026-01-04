@@ -7,7 +7,5 @@ export {
     patchProp,
     patchProps,
     createElement,
-    route,
-    navigate,
-    Link
+    route
 } from "../mite.js";

@@ -43,9 +43,3 @@ export function mount<S>(selector: string, view: ViewFn<S>, state?: S | Signal<S
 
 /** Initializes a parametric hash-based router */
 export function route<S>(selector: string, routes: Record<string, ViewFn<S>>, state?: S | Signal<S>): Signal<S>;
-
-/** Updates browser's hash location for navigation */
-export function navigate(path: string): void;
-
-/** A functional component for router-supported navigation links */
-export function Link(props: { href: string; class?: string;[key: string]: any }, ...children: VNodeChild[]): VNode;

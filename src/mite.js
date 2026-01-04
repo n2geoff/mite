@@ -190,36 +190,6 @@ export const mount = (selector,view,state = {}) => {
 };
 
 /**
- * Utility function to updatebrowser's hash location for navigation.
- *
- * @param {string} path - The target path (e.g., '/home' or 'settings').
- */
-export const navigate = (path) => {
-    window.location.hash = path.startsWith('/') ? path : `/${path}`;
-};
-
-/**
- * A functional component for router-supported navigation links.
- * Automatically manages active classes based on the current hash.
- *
- * @param {Object} props - Properties including 'href' and 'class'.
- * @param {...any} children - Link content.
- * @returns {Object} An 'a' tag VNode.
- */
-export const Link = (props,...children) => {
-    const { href,...rest } = props;
-    const currentPath = window.location.hash.slice(1) || '/';
-    const targetPath = href.startsWith('#') ? href.slice(1) : href;
-    const isActive = currentPath === targetPath;
-
-    return h('a',{
-        ...rest,
-        href: `#${targetPath}`,
-        class: `${props.class || ''} ${isActive ? 'active' : ''}`.trim()
-    },...children);
-};
-
-/**
  * Initializes a parametric hash-based router.
  * Matches routes to components and passes URL parameters.
  *
