@@ -61,16 +61,18 @@ The simplest way to see reactivity in action using `mount`.
 ```js
 import { h, mount } from '../dist/mite.min.js';
 
-const Counter = (state, update) => h('div', { class: 'container' },
-  h('h2', {}, `Count: ${state.count}`),
-  h('div', { class: 'grid' },
-    h('button', { onclick: () => update({ count: state.count + 1 }) }, '+1'),
-    h('button', {
-      class: 'secondary',
-      onclick: () => update({ count: state.count - 1 })
-    }, '-1')
-  )
-);
+const Counter = ({state, update}) =>  {
+    return h('div', { class: 'container' }, [
+        h('h2', {}, `Count: ${state.count}`),
+        h('div', { class: 'grid' }, [
+            h('button', { onclick: () => update({ count: state.count + 1 }) }, '+1'),
+            h('button', {
+                class: 'secondary',
+                onclick: () => update({ count: state.count - 1 })
+            }, '-1')
+        ])
+    ]);
+}
 
 mount('#app', {view: Counter, state: { count: 0 }});
 ```
@@ -80,32 +82,32 @@ mount('#app', {view: Counter, state: { count: 0 }});
 This example demonstrates list rendering with `key` for performance and how to handle form inputs.
 
 ```js
-import { h, mount } from '../dist/mite.core.min.js';
+import { h, mount } from '../dist/mite.min.js';
 
-const TodoApp = (state, update) => {
-  const addTodo = (e) => {
-    e.preventDefault();
-    const input = e.target.querySelector('input');
-    if (!input.value) return;
+const TodoApp = ({state, update}) => {
+    const addTodo = (e) => {
+        e.preventDefault();
+        const input = e.target.querySelector('input');
+        if (!input.value) return;
 
-    update({
-      todos: [...state.todos, { id: Date.now(), text: input.value }]
-    });
-    input.value = '';
-  };
+        update({
+            todos: [...state.todos, { id: Date.now(), text: input.value }]
+        });
+        input.value = '';
+    };
 
-  return h('article', {},
-    h('header', {}, h('h3', {}, 'My Tasks')),
-    h('form', { onsubmit: addTodo },
-      h('fieldset', { class: 'grid' },
-        h('input', { placeholder: 'What needs doing?' }),
-        h('button', { type: 'submit' }, 'Add')
-      )
-    ),
-    h('ul', {},
-      state.todos.map(todo => h('li', { key: todo.id }, todo.text))
-    )
-  );
+    return h('article', [
+        h('header', [h('h3', {}, 'My Tasks')]),
+        h('form', { onsubmit: addTodo }, [
+            h('fieldset', { class: 'grid' }, [
+                h('input', { placeholder: 'What needs doing?' }),
+                h('button', { type: 'submit' }, 'Add')
+            ])
+        ]),
+        h('ul', [
+            state.todos.map(todo => h('li', { key: todo.id }, todo.text))
+        ])
+    ]);
 };
 
 mount('#app', {view: TodoApp, state: { todos: [] }});
@@ -116,43 +118,43 @@ mount('#app', {view: TodoApp, state: { todos: [] }});
 Mite shines when building multi-page interfaces. The `route` passes `params` (like `:id`) directly to your views
 
 ```js
-import { h, route, Link } from '../dist/mite.min.js';
+import { h, mount } from '../dist/mite.min.js';
 
 // Master View
-const Home = (state) => h('div', {},
-  h('h1', {}, 'Project Dashboard'),
-  h('ul', {},
-    state.projects.map(p => h('li', {},
-      Link({ href: `/project/${p.id}` }, `View ${p.name}`)
-    ))
-  )
-);
+const Home = ({state}) => h('div', [
+    h('h1', 'Project Dashboard'),
+    h('ul', [
+        state.projects.map(p => h('li', [
+            h('a', { href: `#/project/${p.id}` }, `View ${p.name}`)
+        ]))
+    ])
+]);
 
 // Detail View
-const Detail = (state, update, params) => {
-  const project = state.projects.find(p => p.id == params.id);
+const Detail = ({state, update, params}) => {
+    const project = state.projects.find(p => p.id == params.id);
 
-  return h('article', {},
-    h('header', {}, h('h2', {}, project?.name || 'Not Found')),
-    h('p', {}, 'Detailed project metrics would go here.'),
-    h('footer', {}, Link({ href: '/' }, '← Back Home'))
-  );
+    return h('article', [
+        h('header', {}, h('h2', {}, project?.name || 'Not Found')),
+        h('p', {}, 'Detailed project metrics would go here.'),
+        h('footer', [h('a', { href: '#/' }, '← Back Home')])
+    ]);
 };
 
 const routes = {
-  '/': Home,
-  '/project/:id': Detail,
-  '404': () => h('h1', {}, '404: Lost in space')
+    '/': Home,
+    '/project/:id': Detail,
+    '404': () => h('h1', {}, '404: Lost in space')
 };
 
 const state = {
-  projects: [
-    { id: 1, name: 'Alpha Station' },
-    { id: 2, name: 'Deep Space 9' }
-  ]
+    projects: [
+        { id: 1, name: 'Alpha Station' },
+        { id: 2, name: 'Deep Space 9' }
+    ]
 };
 
-route('#app', routes, state);
+mount('#app', {routes, state });
 ```
 
 ## Why Hyperscript
@@ -197,4 +199,3 @@ Anyone is welcome to contribute, however, if you decide to get involved, please 
 Currently dogfooding [Mite.js](src/mite.js) against various apps, small and big and adjusting to what feels right for all scenarios. 
 
 Official `v1.0.0` release coming soon!
-  
