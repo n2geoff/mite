@@ -193,7 +193,11 @@ export const mount = (selector, { view, routes, state = {} }) => {
 
         if (routes) {
             const hash = window.location.hash;
-            const path = (hash && hash.startsWith("#/")) ? hash.slice(1) : '/';
+            
+            // bypass anchor links
+            if (hash && !hash.startsWith("#/")) return;
+
+            const path = hash.slice(1) || '/';
             let component = routes[path];
 
             if (!component) {
