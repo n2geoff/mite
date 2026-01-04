@@ -2,8 +2,8 @@ const VERSION = "1.0.0";
 const BANNER = `/* Mite.js v${VERSION} | MIT License | https://github.com/n2geoff/mite */\n`;
 
 const flavors = [
-    { name: "core", entry: "./src/builds/core.js" },
-    { name: "", entry: "./src/builds/standard.js"},
+    { name: "", entry: "./src/builds/core.js" },
+    { name: "full", entry: "./src/builds/full.js"},
 
 ];
 
