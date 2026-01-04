@@ -20,7 +20,7 @@ Give it a try
 
 ## Features
 
-- **Minimalist Core**: ~2KB minified.
+- **Minimalist Core**: ~3KB minified.
 - **Hyperscript Syntax**: Fast, readable component building.
 - **Reactive State**: Built-in global signal with a simple `.update()` API.
 - **Smart Patching VDOM**: Key-aware diffing and robust Fragment support.
@@ -33,14 +33,9 @@ Give it a try
 Just import `Mite JS` in your project
 
 ```js
-import { h, mount } from './mite.standard.min.js';
+import { h, mount } from './mite.min.js';
 ```
 You REALLY only need TWO functions
-
-1. Build components with `h`
-2. Render app with either `mount` or `route`
-
-**Both** render options return a `signal` that you can use, if needed, to integrate your data into a database or share with other libraries
 
 *That seriously reduces congnitive load!*
 
@@ -48,13 +43,13 @@ You REALLY only need TWO functions
 
 Depending on your needs, there are a few variations, see below
 
-| Build                                  | Size* | Features                            |
-| -------------------------------------- | ----- | ----------------------------------- |
-| [Core](/dist/mite.core.min.js)         | ~2KB  | minimal `h`, `mount`, `signal` |
-| [Standard](/dist/mite.min.js) | ~3KB  | adds `route`, `navigate`, `Link`   |
+| Build                            | Size* | Features                                 |
+| -------------------------------- | ----- | ---------------------------------------- |
+| [Core](/dist/mite.min.js)        | ~3KB  | minimal `h`, `mount`, `signal`           |
+| [Full](/dist/mite.full.min.js)   | ~4KB  | adds [http]() and [dom($)]() utilities   |
 
 
-> \* Minified Size
+> \* Minified Size, `gzip` is event SMALLER!
 
 
 ## Usage Examples
@@ -64,7 +59,7 @@ Depending on your needs, there are a few variations, see below
 The simplest way to see reactivity in action using `mount`.
 
 ```js
-import { h, mount } from '../dist/mite.core.min.js';
+import { h, mount } from '../dist/mite.min.js';
 
 const Counter = (state, update) => h('div', { class: 'container' },
   h('h2', {}, `Count: ${state.count}`),
@@ -77,7 +72,7 @@ const Counter = (state, update) => h('div', { class: 'container' },
   )
 );
 
-mount('#app', Counter, { count: 0 });
+mount('#app', {view: Counter, state: { count: 0 }});
 ```
 
 ### 2. Todo List (Keys & Forms)
@@ -113,7 +108,7 @@ const TodoApp = (state, update) => {
   );
 };
 
-mount('#app', TodoApp, { todos: [] });
+mount('#app', {view: TodoApp, state: { todos: [] }});
 ```
 
 ### 3. SPA Router (Master/Detail)
@@ -167,14 +162,11 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 
 ## API Reference
 
-| **Function** | **Description**    |
-| -------------| ------------------ |
-| `h(tag, props, ...children)`      | Hyperscript style UI component. Returns DOM. |
-| `mount(selector, view, state)`    | Mounts a component to a DOM element. Returns a signal.       |
-| `route(selector, routes, state)` | Mounts & Initializes hash-based routing. Returns a signal.   |
-| `signal(initial, log = false)`    | Creates a standalone reactive signal.                        |
-| `Link(props, ...children)`        | Helper for `<a>` tags. Auto-adds `#` and `active` class.    |
-| `navigate(path)`                  | Programmatically changes the route.                         |
+| **Function** | **Description**           |
+| -------------| ------------------        |
+| `h(tag, props, ...children)`             | Hyperscript style UI component. Returns DOM. |
+| `mount(selector, {view, state, routes})` | Mounts component to DOM. Returns a signal.   |
+| `signal(initial, log = false)`    | Creates reactive signal store                       |
 
 ## Test
 
@@ -199,3 +191,10 @@ Anyone is welcome to contribute, however, if you decide to get involved, please 
 ## LICENSE
 
 - [MIT](LICENSE)
+
+## Notes
+
+Currently dogfooding [Mite.js](src/mite.js) against various apps, small and big and adjusting to what feels right for all scenarios. 
+
+Official `v1.0.0` release coming soon!
+  

@@ -12,8 +12,24 @@ export interface VNode {
     [key: string]: any;
 }
 
+/**
+ * The Context object passed to every view function.
+ */
+export interface MiteContext<S> {
+    state: S;
+    update: (next: Partial<S>) => void;
+    params: Record<string, string>;
+    content: VNode | null;
+}
+
+export interface MountOptions<S> {
+    view?: ViewFn<S>;
+    routes?: Record<string, ViewFn<S>>;
+    state?: S | Signal<S>;
+}
+
 export type UpdateFn<S> = (next: Partial<S>) => void;
-export type ViewFn<S> = (state: S, update: UpdateFn<S>, params?: Record<string, string>) => VNode;
+export type ViewFn<S> = (ctx: MiteContext<S>) => VNode;
 
 export interface Signal<S> {
     getState: () => S;
@@ -36,10 +52,7 @@ export function createElement(vnode: VNodeChild, ns?: string): Node;
 export function patch(parent: HTMLElement | DocumentFragment, newNode: VNodeChild, oldNode?: VNodeChild, index?: number): void;
 
 /** Creates a reactive state container */
-export function signal<S>(initState: S, logger?: boolean): S<S>;
+export function signal<S>(initState: S, logger?: boolean): Signal<S>;
 
 /** Mounts a reactive view to a DOM selector */
-export function mount<S>(selector: string, view: ViewFn<S>, state?: S | Signal<S>): Signal<S>;
-
-/** Initializes a parametric hash-based router */
-export function route<S>(selector: string, routes: Record<string, ViewFn<S>>, state?: S | Signal<S>): Signal<S>;
+export function mount<S>(selector: string, options: MountOptions<S>): Signal<S>;
