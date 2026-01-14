@@ -178,9 +178,10 @@ export const signal = (initState, logger = false) => {
  * 
  * @returns {Object} The signal instance used by the application.
  */
-export const mount = (selector, { view, routes, state = {} }) => {
+export const mount = (selector, view, state = {}, opts = {}) => {
     const container = document.querySelector(selector);
     const data = state?.subscribe ? state : signal(state || {});
+    const routes = opts.routes;
     let oldVNode = null;
 
     const render = () => {
@@ -224,7 +225,7 @@ export const mount = (selector, { view, routes, state = {} }) => {
         }
 
         // handle layout (view) content
-        const finalVNode = view ? view(ctx) : ctx.content;
+        const finalVNode = (typeof view === 'function') ? view(ctx) : ctx.content;
 
         if (finalVNode) {
             patch(container, finalVNode, oldVNode, 0);

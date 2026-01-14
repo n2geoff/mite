@@ -74,7 +74,7 @@ const Counter = ({state, update}) =>  {
     ]);
 }
 
-mount('#app', {view: Counter, state: { count: 0 }});
+mount('#app', Counter, state: { count: 0 });
 ```
 
 ### 2. Todo List (Keys & Forms)
@@ -110,7 +110,7 @@ const TodoApp = ({state, update}) => {
     ]);
 };
 
-mount('#app', {view: TodoApp, state: { todos: [] }});
+mount('#app', TodoApp, state: { todos: [] });
 ```
 
 ### 3. SPA Router (Master/Detail)
@@ -154,7 +154,7 @@ const state = {
     ]
 };
 
-mount('#app', {routes, state });
+mount('#app', null, state, {routes});
 ```
 
 ## Why Hyperscript
@@ -167,7 +167,7 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 | **Function** | **Description**           |
 | -------------| ------------------        |
 | `h(tag, props, ...children)`             | Hyperscript style UI component. Returns DOM. |
-| `mount(selector, {view, state, routes})` | Mounts component to DOM. Returns a signal.   |
+| `mount(selector, view, state = {}, opts = {})` | Mounts component to DOM. Returns a signal.   |
 | `signal(initial, log = false)`    | Creates reactive signal store                       |
 
 ## Test

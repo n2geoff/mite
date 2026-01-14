@@ -52,27 +52,27 @@
             )
         ]);
 
-        function LiveDemo(state,update) {
+        function LiveDemo({state,update}) {
             return h("section",{ class: "container", id: "demo" },[
                 h('h2',{},'Interactive Demos'),
                 h("p", {}, [
                     h("em", {}, "We got demos?!"),
                 ]),
                 h("article", {class: "grid"}, [
-                    Counter(state,update),
-                    Todo(state,update)
+                    Counter({state,update}),
+                    Todo({state,update})
                 ])
             ]);
         }
 
         // --- Pages ---
 
-        const Home = (state,update) => h('div',{key: 'home'},[
+        const Home = ({state,update}) => h('div',{key: 'home'},[
             Navigation(),
             Hero(),
             Features(),
             h("br", {style: "margin: 2rem"}),
-            LiveDemo(state,update),
+            LiveDemo({state,update}),
             h('footer',{ class: 'container grid' },[
                 h('small',{style: "text-align: center"},'Built with Mite | @copyright 2025 | All rights reserved.')
             ])
@@ -102,7 +102,7 @@
             todos: []
         };
 
-        mount('#app',{routes, state});
+        mount('#app', null ,state, {routes});
     </script>
 </body>
 </html>
