@@ -1,7 +1,7 @@
 import { expect,test,describe,beforeEach } from "bun:test";
 import { Window } from "happy-dom";
 import { patch, signal } from "../src/mite.js";
-import { html } from "../src/html.js";
+import { html } from "../src/xhtm.js";
 
 // Setup the DOM environment
 const window = new Window();

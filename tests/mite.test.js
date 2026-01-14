@@ -71,6 +71,6 @@ describe("Mite",() => {
                 done(); // Tells Bun the test is finished
             }
         });
-        mount("#app", {view: View});
+        mount("#app", View);
     });
 });
