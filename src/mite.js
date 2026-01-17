@@ -119,10 +119,13 @@ export const patchProp = (el,key,next,prev) => {
  * @param {Object} oldNode - The previous VNode to diff against.
  * @param {number} [index=0] - The child index in the parent.
  */
-export const patch = (parent,newNode,oldNode,index = 0) => {
+export const patch = (parent, newNode, oldNode, index = 0) => {
     const target = parent.childNodes[index];
 
+    // no new node, remove existing
     if (newNode == null) {return target && parent.removeChild(target);}
+
+    // no target, append new element
     if (!target) {return parent.appendChild(createElement(newNode));}
 
     const isNewObj = typeof newNode === 'object';
@@ -130,15 +133,20 @@ export const patch = (parent,newNode,oldNode,index = 0) => {
 
     // if types, tags, or keys differ: replace
     if (isNewObj !== isOldObj || (isNewObj && (newNode?.tag !== oldNode?.tag || newNode.props?.key !== oldNode.props?.key))) {
-        return parent.replaceChild(createElement(newNode),target);
+        return parent.replaceChild(createElement(newNode), target);
     }
 
     if (isNewObj) {
-        patchProps(target,newNode.props,oldNode.props);
-        const newC = newNode.children,oldC = oldNode.children;
-        const max = Math.max(newC.length,oldC.length);
+        patchProps(target, newNode.props, oldNode.props);
+        const newC = newNode.children;
+        const oldC = oldNode.children;
+        const max = Math.max(newC.length, oldC.length);
+        
+        // fragments use parent , others use target
         const p = newNode.tag === 'fragment' ? parent : target;
+
         for (let i = 0; i < max; i++) { 
+            // fix shifting indexs
             patch(p, newC[i], oldC[i], i >= newC.length ? newC.length : i); 
         }
     } else if (target.nodeValue !== newNode) {

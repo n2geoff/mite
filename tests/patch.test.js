@@ -1,6 +1,6 @@
 import { expect,test,describe,beforeEach } from "bun:test";
 import { Window } from "happy-dom";
-import { patch, signal } from "../src/mite.js";
+import { patch, signal, h, mount } from "../src/mite.js";
 import { html } from "../src/xhtm.js";
 
 // Setup the DOM environment
@@ -13,6 +13,37 @@ describe("Mite - Patching",() => {
     beforeEach(() => {
         container = document.createElement("div");
         document.body.appendChild(container);
+    });
+
+    test("reconciliation: shrinking a list removes the correct elements", () => {
+        document.body.innerHTML = '<div id="app"></div>';
+
+        function App({state}) {
+            return h('ul', {}, state.items.map(i => h('li', {}, i)))
+        }
+
+        // 1. Initial render with 3 items
+        const state = mount('#app', App,
+            { items: ['A', 'B', 'C'] }
+        );
+
+        const list = document.querySelector('ul');
+        expect(list.children.length).toBe(3);
+        expect(list.children[2].textContent).toBe('C');
+
+        state.update({ items: ['A'] });
+
+        expect(list.children.length).toBe(1);
+        expect(list.children[0].textContent).toBe('A');
+        expect(document.querySelectorAll('li').length).toBe(1);
+    });
+
+    test("mount signature: handles nullable view and positional state", () => {
+        document.body.innerHTML = '<div id="app"></div>';
+
+        const state = mount('#app', null, { count: 10 });
+
+        expect(state.getState().count).toBe(10);
     });
 
     test("should apply style as a string",() => {
