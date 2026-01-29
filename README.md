@@ -113,6 +113,14 @@ const TodoApp = ({state, update}) => {
 mount('#app', TodoApp, state: { todos: [] });
 ```
 
+#### Raw HTML
+
+Rendering raw `html` can be achived with the property key of `html`, and the value of the html you would like to render.  Treat as UNSAFE, only VERY basic sanitation provided
+
+```js
+h("p", {html: "I'm your <strong>Huckleberry</strong>"})
+```
+
 ### 3. SPA Router (Master/Detail)
 
 Mite shines when building multi-page interfaces. The `route` passes `params` (like `:id`) directly to your views

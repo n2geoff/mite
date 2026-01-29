@@ -89,7 +89,17 @@ export const patchProps = (el,newProps = {},oldProps = {}) => {
  * @param {any} prev - The previous value for diffing and cleanup.
  */
 export const patchProp = (el,key,next,prev) => {
-    if (key.startsWith('on')) {
+    if (key === 'html') {
+        if (next !== prev) {
+            // minimal sanitization
+            const clean = (next ?? '')
+                .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
+                .replace(/on\w+="[^"]*"/gim, "")
+                .replace(/on\w+='[^']*'/gim, "");
+                
+            el.innerHTML = clean;
+        }
+    } else if (key.startsWith('on')) {
         const name = key.slice(2).toLowerCase();
         if (prev) el.removeEventListener(name,prev);
         if (next) el.addEventListener(name,next);
