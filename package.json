@@ -17,7 +17,8 @@
 		}
 	},
 	"scripts": {
-		"test": "bun test",
+		"test": "bun run test:build; bun test",
+		"test:build": "bun build ./src/builds/test.build.js --outdir ./tests/.build",
 		"test:watch": "bun test --watch",
 		"build": "bun ./build.js"
 	},

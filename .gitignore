@@ -4,6 +4,7 @@ node_modules
 # output
 out
 *.tgz
+.build
 
 # code coverage
 coverage

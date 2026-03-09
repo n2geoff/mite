@@ -180,9 +180,13 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 
 ## Test
 
+A special build of mite is generated, `test.build.js` that exports everything and is placed in the `tests/` directory.  This file is ignored by default.
+
 ```sh
-bun test
+bun run test
 ```
+
+> NOTE: `bun test` *will* fail. `test.build.js` must exist first via `bun run test` or use `bun run test:build` first.
 
 ## Build
 
@@ -201,6 +205,12 @@ Anyone is welcome to contribute, however, if you decide to get involved, please 
 ## LICENSE
 
 - [MIT](LICENSE)
+
+## Todo
+
+- Add, *optional*, standalone `http` utility (done)
+- Add, *optional*, standalone `$` dom utility (done)
+- Add, *optional*, standalone storage abstraction (wip)
 
 ## Notes
 
