@@ -41,7 +41,7 @@ function createStorageAdapter(storageRef) {
 
         set(key, value, opts = {}) {
             const serialized = serialize(value);
-            if (serialized === null) {
+            if (serialized === null || serialized === undefined) {
                 return null;
             }
             storageRef.setItem(String(key), serialized);
