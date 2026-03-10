@@ -75,18 +75,22 @@ function createCookieAdapter() {
     const encode = encodeURIComponent;
     const decode = decodeURIComponent;
 
+    // Get raw cookie value by name (already URL-decoded by browser)
     function getRaw(name) {
-        const match = document.cookie.match(new RegExp(`(?:^|; )${encode(name)}=([^;]*)`));
-        if (match) {
+        const match = document.cookie.match(new RegExp(`(?:^|; )${name}=(.*?)($|;)`));
+        if (!match) {return null;}
+        try {
             return decode(match[1]);
+        } catch (_) {
+            return match[1];
         }
-        return null;
     }
 
+    // Set cookie with expiry, path, domain
     function setRaw(name, value, opts = {}) {
         const { expires = 60 /* minutes */, path = '/', domain } = opts;
         const date = new Date(Date.now() + expires * 60 * 1000);
-        let cookieStr = `${encode(name)}=${value}; path=${path}`;
+        let cookieStr = `${name}=${encode(value)}; path=${path}`;
         if (domain) {
             cookieStr += `; domain=${domain}`;
         }
@@ -94,55 +98,70 @@ function createCookieAdapter() {
         document.cookie = cookieStr;
     }
 
+    // Remove a single cookie
     function removeRaw(name) {
         try {
-            document.cookie = `${encode(name)}=; max-age=-1; path=/`;
+            document.cookie = `${name}=; max-age=-1; path=/`;
         } catch (_) { }
     }
 
-    // Cookie "clear()" — best-effort, delete all known cookies by iterating raw string
+    // For clear(): iterate all cookies
+    function getAllCookieNames() {
+        if (!document.cookie) return [];
+        return document.cookie.split(';')
+            .map(c => c.trim().split('=')[0])
+            .filter(Boolean);
+    }
+
     function clearCookies() {
         try {
-            const cookieStr = document.cookie || '';
-            if (!cookieStr) return;
-            const names = cookieStr.split(';').map((part) => {
-                const eqIdx = part.indexOf('=');
-                return eqIdx > 0 ? decodeURIComponent(part.slice(0, eqIdx).trim()) : null;
-            }).filter(Boolean); // keep only truthy names
-
-            for (const name of names) {
+            for (const name of getAllCookieNames()) {
                 removeRaw(name);
             }
         } catch (_) { }
     }
 
-    const storageRef = {
-        getItem: getRaw,
-        setItem: (name, value) => setRaw(name, value),
-        removeItem: removeRaw
-    };
+    return {
+        get(key) {
+            try {
+                return getRaw(String(key));
+            } catch (_) {
+                return null;
+            }
+        },
 
-    const adapter = createStorageAdapter(storageRef);
+        set(key, value, opts = {}) {
+            try {
+                const strValue = String(value);
+                setRaw(String(key), strValue, opts);
+                return strValue; // ✅ Return the stored string
+            } catch (_) {
+                return null;
+            }
+        },
 
-    // Override .set() for cookies with opts support
-    adapter.set = (key, value, opts = {}) => {
-        const serialized = serialize(value);
-        if (serialized === null) {
-            return null;
+        remove(key) {
+            try {
+                const raw = getRaw(String(key));
+                if (raw == null) return null;
+                removeRaw(String(key));
+                return raw;
+            } catch (_) {
+                return null;
+            }
+        },
+
+        clear() {
+            try {
+                clearCookies();
+            } catch (_) { }
+        },
+
+        update(key, data) {
+            const result = this.set(key, data);
+            return result == null ? null : this.get(key); // get back what was stored
         }
-        setRaw(key, serialized, opts);
-        return deserialize(serialized);
     };
-
-    adapter.clear = () => clearCookies();
-
-    adapter.update = (key, data) => {
-        const existing = this.get(key) || {};
-        const merged = { ...existing, ...(data ?? {}) };
-        return this.set(key, merged);
-    };
-
-    return adapter;
 }
 
 export const local = createStorageAdapter("localStorage");
