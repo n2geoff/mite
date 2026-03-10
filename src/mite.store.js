@@ -1,8 +1,8 @@
 /**
  * Store 
  * 
- * consistant abstraction over local, session, 
- * and cookie storage
+ * unified abstraction layer over local, session, 
+ * and cookie storage systems
  *
  * @author Geoff Doty <github.com/n2geoff>
  * @license MIT
@@ -29,10 +29,10 @@ const deserialize = (raw, asText = false) => {
     }
 };
 
-function createStorageAdapter(storageRef) {
+function createStorageAdapter(store) {
     return {
         get(key) {
-            const item = storageRef.getItem(String(key));
+            const item = window[store].getItem(String(key));
             if (item == null) {
                 return null;
             }
@@ -44,22 +44,22 @@ function createStorageAdapter(storageRef) {
             if (serialized === null || serialized === undefined) {
                 return null;
             }
-            storageRef.setItem(String(key), serialized);
+            window[store].setItem(String(key), serialized);
             return value;
         },
 
         remove(key) {
-            const raw = storageRef.getItem(String(key));
+            const raw = window[store].getItem(String(key));
             if (raw == null) {
                 return null;
             }
-            storageRef.removeItem(String(key));
+            window[store].removeItem(String(key));
             return deserialize(raw);
         },
 
         clear() {
             try {
-                storageRef.clear();
+                window[store].clear();
             } catch (_) { }
         },
 
@@ -145,20 +145,6 @@ function createCookieAdapter() {
     return adapter;
 }
 
-export function Store(type = 'local') {
-    if (type === 'local') {
-        return createStorageAdapter(window.localStorage);
-    }
-    else if (type === 'session') {
-        return createStorageAdapter(window.sessionStorage);
-    }
-    else if (type === 'cookie') {
-        if (typeof document === 'undefined') {
-            throw new Error('Cookies unavailable in non-browser environments');
-        }
-        return createCookieAdapter();
-    }
-    else {
-        throw new Error(`Unsupported storage type: "${type}". Use "local", "session", or "cookie".`);
-    }
-}
+export const local = createStorageAdapter("localStorage");
+export const session = createStorageAdapter("sessionStorage");
+export const cookie = createCookieAdapter();

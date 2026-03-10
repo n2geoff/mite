@@ -1,17 +1,15 @@
 import { expect, test, beforeEach, describe } from "bun:test";
 import { Window } from "happy-dom";
-import { Store } from "./.build/test.build.js";
+import { local } from "./.build/test.build.js";
 
 const window = new Window();
 global.window = window;
 global.document = window.document;
 
 describe("Local Storage", () => {
-    let local;
 
     beforeEach(() => {
-        local = Store('local');
-        window.localStorage.clear();
+        local.clear();
     });
 
     test("set returns the stored value", () => {

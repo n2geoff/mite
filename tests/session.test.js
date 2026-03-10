@@ -1,18 +1,16 @@
 import { expect, test, beforeEach, describe } from "bun:test";
 import { Window } from "happy-dom";
-import { Store } from "./.build/test.build.js";
+import { session } from "./.build/test.build.js";
 
 const window = new Window();
 global.window = window;
 global.document = window.document;
 
 describe("Session Storage", () => {
-    let session;
 
     beforeEach(() => {
         // Fresh session store for each test
-        session = Store('session');
-        window.sessionStorage.clear();
+        session.clear();
     });
 
     test("set returns the stored value", () => {
