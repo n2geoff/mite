@@ -1,4 +1,4 @@
-import { expect,test,describe,beforeEach,spyOn } from "bun:test";
+import { expect,test,describe,beforeEach } from "bun:test";
 import { Window } from "happy-dom";
 import { patch, html} from "./.build/test.build.js";
 
