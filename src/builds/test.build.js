@@ -11,7 +11,7 @@ import xhtm from "../xhtm.js";
 
 export {http} from "../mite.http.js";
 export {dom as $} from "../mite.dom.js";
-export {Store} from "../mite.store.js";
+export {local, session, cookie} from "../mite.store.js";
 
 export const html = xhtm.bind(h);
 
