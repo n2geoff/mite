@@ -17,13 +17,13 @@
 		}
 	},
 	"scripts": {
-		"test": "bun run test:build; bun test",
+		"test": "bun run test:build && bun test",
 		"test:build": "bun build ./src/builds/test.build.js --outdir ./tests/.build",
 		"test:watch": "bun test --watch",
 		"build": "bun ./build.js"
 	},
 	"devDependencies": {
-		"@types/bun": "^1.3.8",
-		"happy-dom": "^20.4.0"
+		"@types/bun": "^1.3.10",
+		"happy-dom": "20.4.0"
 	}
 }
