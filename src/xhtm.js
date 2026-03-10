@@ -1,6 +1,3 @@
-import {h} from "./mite.js";
-export const html = htm.bind(h);
-
 /*! xhtm v1.6.2 | MIT LICENSE | https://github.com/dy/xhtm */
 const FIELD = '\ue000', QUOTES = '\ue001'
 
