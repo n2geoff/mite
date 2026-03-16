@@ -1,6 +1,6 @@
 # Store
 
-A unified, minimalist storage abstraction for `localStorage`, `sessionStorage`, and cookies.
+A unified storage abstraction for `localStorage` & `sessionStorage`.
 
 - Auto-serializes/deserializes  
 - Silent failures (`null` return)  
@@ -18,15 +18,14 @@ import { Store } from './mite.store.js';
 
 ## Usage
 
-Get a storage instance
+Get a storage reference
 
 ```js
-const local   = Store('local');    // window.localStorage
-const session = Store('session');  // window.sessionStorage
-const cookie  = Store('cookie');   // document.cookie (best-effort)
+import {local} from "./mite.store.js";    // window.localStorage
+import {session} from "./mite.store.js";  // window.sessionStorage
 ```
 
-> 🚫 Throws error for unsupported types or non-browser environments (e.g., Node.js with cookies).
+> 🚫 Throws error for unsupported types or non-browser environments.
 
 ### Core API
 
@@ -35,11 +34,8 @@ const cookie  = Store('cookie');   // document.cookie (best-effort)
 Stores a value and returns it. Returns `null` on failure.
 
 ```js
-const user = local.set('user', { name: 'Geoff', age: 50 });
-// user === { name: 'Geoff', age: 50 }
-
-// Cookie-specific options (ignored by local/session)
-cookie.set('theme', 'dark', { expires: 30, path: '/app' });
+const user = local.set('user', { name: 'Conan', age: 44 });
+// user === { name: 'Conan', age: 44 }
 ```
 
 #### `get(key)`
@@ -47,8 +43,8 @@ cookie.set('theme', 'dark', { expires: 30, path: '/app' });
 Retrieves and deserializes a value. Returns `null` if missing or invalid.
 
 ```js
-const user = session.get('user'); // { name: "Geoff", age: 50 }
-const missing = local.get('nothing'); // null
+const user    = session.get('user');   // { name: "Conan", age: 44 }
+const missing = local.get('nothing');  // null
 ```
 
 #### `remove(key)`
@@ -57,7 +53,7 @@ Deletes the value and returns what was stored. Returns `null` if absent.
 
 ```js
 const removed = local.remove('user');
-// removed === { name: "Geoff", age: 50 }
+// removed === { name: "Conan", age: 44 }
 ```
 
 #### `clear()`
@@ -65,7 +61,6 @@ const removed = local.remove('user');
 Removes all items in the store (no return value).
 
 - **local/session**: Native `.clear()`
-- **cookie**: Best-effort — deletes *all* cookies accessible via `document.cookie` (same-domain only)
 
 ```js
 session.clear(); // empties session storage
@@ -85,28 +80,10 @@ const updated = local.update('config', { lang: 'fr' });
 
 ------
 
-## Options
-
-- **`opts.expires`** (only for cookies)
-   Expiry time in minutes. Default: `60`.
-   Example: `{ expires: 1440 }` → 24 hours.
-- **`opts.path`, `opts.domain`**
-   Cookie scoping (ignored by local/session storage).
-
-> All `.set()` methods accept `opts = {}` as third parameter — but only cookies use it. This keeps the API consistent.
-
-------
-
 ## Error Handling
 
 - All operations return `null` on failure (no thrown errors).
 - Invalid keys/values are handled gracefully via serialization safety.
-- Cookies throw in non-browser environments.
-
-```js
-const result = Store('cookie').set('x', 123);
-// result === null if document.cookie is unavailable
-```
 
 ------
 
@@ -115,9 +92,10 @@ const result = Store('cookie').set('x', 123);
 ### Persist user preferences
 
 ```js
-const local = Store('local');
+import {local} from "./mite.store.js";
+
 let prefs = local.get('prefs') || { theme: 'light' };
-prefs = local.update('prefs', { darkMode: true });
+    prefs = local.update('prefs', { darkMode: true });
 ```
 
 ### Session-scoped auth token
@@ -127,16 +105,9 @@ session.set('token', 'abc123');
 // auto-removed on tab close
 ```
 
-### Short-lived cookie for A/B test flag
-
-```js
-cookie.set('abVariant', 'B', { expires: 5 }); // 5 minutes
-```
-
 ------
 
 ## Notes
 
 - Uses `JSON.stringify`/`parse` for objects, arrays, and non-strings.
-- Cookies store only strings → values are converted to JSON before saving.
 - Shallow merge in `.update()` prevents circular reference errors.
