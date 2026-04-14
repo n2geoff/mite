@@ -169,13 +169,13 @@ export const patch = (parent, newNode, oldNode, index = 0) => {
  *
  * @param {Object} initState - The initial state object.
  * @param {boolean} [logger=false] - Whether to log state updates to the console.
- * @returns {Object} An object containing getState, update, and subscribe methods.
+ * @returns {Object} An object containing val, update, and subscribe methods.
  */
 export const signal = (initState, logger = false) => {
     let state = { ...initState };
     const listeners = [];
     return {
-        getState: () => state,
+        val: () => state,
         update: (next) => {
             state = { ...state,...next };
             if (logger) console.log("State Update:",state);
@@ -204,7 +204,7 @@ export const mount = (selector, view, state = {}, opts = {}) => {
 
     const render = () => {
         const ctx = {
-            state: data.getState(),
+            state: data.val(),
             update: data.update,
             params: {},
             content: null
