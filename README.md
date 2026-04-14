@@ -74,7 +74,7 @@ const Counter = ({state, update}) =>  {
     ]);
 }
 
-mount('#app', Counter, state: { count: 0 });
+mount('#app', Counter, { count: 0 });
 ```
 
 ### 2. Todo List (Keys & Forms)
@@ -110,7 +110,7 @@ const TodoApp = ({state, update}) => {
     ]);
 };
 
-mount('#app', TodoApp, state: { todos: [] });
+mount('#app', TodoApp, { todos: [] });
 ```
 
 #### Raw HTML
