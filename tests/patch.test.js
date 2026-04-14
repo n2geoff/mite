@@ -42,7 +42,7 @@ describe("Mite - Patching",() => {
 
         const state = mount('#app', null, { count: 10 });
 
-        expect(state.getState().count).toBe(10);
+        expect(state.val().count).toBe(10);
     });
 
     test("should apply style as a string",() => {
@@ -125,12 +125,12 @@ describe("Mite - Patching",() => {
     `;
 
         // Render 1
-        let oldV = View(myStore.getState());
+        let oldV = View(myStore.val());
         patch(container,oldV);
 
         // Render 2 (Shuffle)
         myStore.update({ items: [{ id: 2,text: "B" },{ id: 1,text: "A" }] });
-        const newV = View(myStore.getState());
+        const newV = View(myStore.val());
         patch(container,newV,oldV);
 
         const lis = container.querySelectorAll("li");

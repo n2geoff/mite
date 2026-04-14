@@ -32,7 +32,7 @@ export type UpdateFn<S> = (next: Partial<S>) => void;
 export type ViewFn<S> = (ctx: MiteContext<S>) => VNode;
 
 export interface Signal<S> {
-    getState: () => S;
+    val: () => S;
     update: UpdateFn<S>;
     subscribe: (fn: (state: S) => void) => number;
 }
