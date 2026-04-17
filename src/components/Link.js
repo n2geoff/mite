@@ -1,3 +1,5 @@
+import {h} from "../mite.js";
+
 /**
  * A functional component for router-supported navigation links.
  * Automatically manages active classes based on the current hash.
