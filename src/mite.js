@@ -213,7 +213,7 @@ export const mount = (selector, view, state = {}) => {
             content: null
         };
 
-        const vnode = view(ctx);
+        const vnode = typeof view === 'function' ? view(ctx) : ctx.content;
 
         if (vnode) {
             patch(container, vnode, oldVNode, 0);
