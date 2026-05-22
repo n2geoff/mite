@@ -13,17 +13,12 @@ Brain space is limited, time is limited, ideas are abundant, so enter: **Mite JS
 
 We have all been there...
 
-
-
 *Its midnight. You need sleep. With morning comes work and it has demands, but you have an idea that you cannot shake.  You need to just get it out of your head and into some code.  You could grab one of the heavy-weight champions, but you don't have time for all the boilerplate fluff. You could also reach for AI, but that is prompt-after-prompt until the sun comes up -- no time for that.*
-
-
 
 Build your idea NOW, no distractions, minimal **Mite** work!
 
-
-
 [Give it a try](dist/mite.min.js)
+
 
 ## Features
 
@@ -34,22 +29,17 @@ Build your idea NOW, no distractions, minimal **Mite** work!
 - **Parametric Hash Router**: Support for dynamic routes (e.g., `/user/:id`).
 - **Build Variation**: From min-to-full featured your choice.
 
-Add More...
+**Add More...**
 
 Mite also includes a collection of minimal language agnostic helpers, you can include in your builds or use with any other framework or just plain Javascript
 
 - HTTP Client
-
 - DOM Utility
-
 - Local Storage
-
 - Session Storage
-
 - Cookie Storage
 
 See `/docs` from more information.
-
 
 
 ## Getting Started
@@ -65,7 +55,6 @@ You REALLY only need TWO functions
 *That seriously reduces congnitive load!*
 
 
-
 ### Pick You Flavor
 
 Depending on your needs, there are a few variations, see below
@@ -78,7 +67,6 @@ Depending on your needs, there are a few variations, see below
 | [Full](/dist/mite.full.min.js) | ~4KB    | adds [http](), [dom($)](), [local](), [session](), and [cookie]() utilities |
 
 > \* Minified Size, `gzip` is event SMALLER!
-
 
 
 ## Usage Examples
@@ -194,9 +182,11 @@ const state = {
 route('#app', null, state, {routes});
 ```
 
+
 ## Why Hyperscript
 
 It provides the smallest foot-print, requires no build step, still quite readable.
+
 
 ## API Reference
 
@@ -209,7 +199,6 @@ It provides the smallest foot-print, requires no build step, still quite readabl
 > [or XHTM Alternative](dist/mite.html.min.js) via Template Literal syntax.
 
 
-
 ## Test
 
 A special build of mite is generated, `test.build.js` that exports everything and is placed in the `tests/` directory.  This file is ignored by default.
@@ -220,29 +209,36 @@ bun run test
 
 > NOTE: `bun test` *will* fail. `test.build.js` must exist first via `bun run test` or use `bun run test:build` first.
 
+
 ## Build
 
 ```sh
 bun run build
 ```
 
+
 ## Support
 
 Please open [an issue](https://github.com/n2geoff/mite/issues/new) for support.
+
 
 ## Contributing
 
 Anyone is welcome to contribute, however, if you decide to get involved, please take a moment to review the [guidelines](CONTRIBUTING.md), they're minimalistic;)
 
+
 ## LICENSE
 
 - [MIT](LICENSE)
 
+
 ## Todo
 
-- Add, *optional*, standalone `http` utility (done)
-- Add, *optional*, standalone `$` dom utility (done)
-- Add, *optional*, standalone storage abstraction (wip)
+- add more `tests/`
+- maybe add `test.it` as a client-side testing utility into `src/`
+- improve github pages
+- add more examples
+
 
 ## Notes
 
