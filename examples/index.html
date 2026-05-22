@@ -11,7 +11,7 @@
         <div id="app"></div>
     </main>
     <script type="module">
-        import { h,mount } from '../src/mite.js';
+        import {h, route} from "../dist/mite.core.min.js";
         import {Counter} from "./components/Counter.js";
         import {Todo} from "./components/Todo.js";
 
@@ -102,7 +102,7 @@
             todos: []
         };
 
-        mount('#app', null ,state, {routes});
+        route('#app', routes, state);
     </script>
 </body>
 </html>
