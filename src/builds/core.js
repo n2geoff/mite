@@ -1,1 +1,2 @@
-export { h,mount,signal,patch,patchProps,patchProp,createElement } from "../mite.js";
+export { h,mount,signal } from "../mite.js";
+export { route } from "../mite.route.js";

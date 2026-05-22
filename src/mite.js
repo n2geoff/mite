@@ -1,14 +1,20 @@
 /**
  * Mite.js - A Minimalist's SPA framework
+ * 
  * @module Mite
+ * 
+ * @author Geoff Doty
+ * @version 1.0
+ * @license MIT
+ * @source http://github.com/n2geoff/mite
  */
 
 /**
  * Creates a virtual node (VNode).
  *
- * @param {string|function} tag - The HTML tag (or 'fragment') or 'function'
- * @param {any} props - Attributes or the first child
- * @param {...any} children - Child VNodes or text content.
+ * @param {String|Function} tag - The HTML tag (or 'fragment') or 'function'
+ * @param {Any} props - Attributes or the first child
+ * @param {...ny} children - Child VNodes or text content.
  * @returns {Object} The VNode representation.
  */
 export const h = (tag, props, ...children) => {
@@ -33,7 +39,7 @@ export const h = (tag, props, ...children) => {
  * Supports SVG namespaces and 'oncreate' lifecycle hooks.
  *
  * @param {Object|string|number} vnode - The VNode to materialize.
- * @param {boolean} [isSVG=false] - Whether to create nodes in the SVG namespace.
+ * @param {Boolean} [isSVG=false] - Whether to create nodes in the SVG namespace.
  * @returns {Node} The resulting DOM element or text node.
  */
 export const createElement = (vnode,isSVG = false) => {
@@ -84,9 +90,9 @@ export const patchProps = (el,newProps = {},oldProps = {}) => {
  * Handles event delegation, style objects/strings, and boolean attributes.
  *
  * @param {HTMLElement} el - The target DOM element.
- * @param {string} key - The property name (e.g., 'class', 'onclick', 'style').
- * @param {any} next - The new value to apply.
- * @param {any} prev - The previous value for diffing and cleanup.
+ * @param {String} key - The property name (e.g., 'class', 'onclick', 'style').
+ * @param {Any} next - The new value to apply.
+ * @param {Any} prev - The previous value for diffing and cleanup.
  */
 export const patchProp = (el,key,next,prev) => {
     if (key === 'html') {
@@ -127,7 +133,7 @@ export const patchProp = (el,key,next,prev) => {
  * @param {HTMLElement} parent - The container DOM element.
  * @param {Object} newNode - The new VNode to render.
  * @param {Object} oldNode - The previous VNode to diff against.
- * @param {number} [index=0] - The child index in the parent.
+ * @param {Number} [index=0] - The child index in the parent.
  */
 export const patch = (parent, newNode, oldNode, index = 0) => {
     const target = parent.childNodes[index];
@@ -168,7 +174,7 @@ export const patch = (parent, newNode, oldNode, index = 0) => {
  * Creates a reactive state container.
  *
  * @param {Object} initState - The initial state object.
- * @param {boolean} [logger=false] - Whether to log state updates to the console.
+ * @param {Boolean} [logger=false] - Whether to log state updates to the console.
  * @returns {Object} An object containing val, update, and subscribe methods.
  */
 export const signal = (initState, logger = false) => {
@@ -186,20 +192,17 @@ export const signal = (initState, logger = false) => {
 };
 
 /**
- * Mounts a reactive view or router to a DOM selector.
- * 
- * @param {string} selector - The CSS selector for the root element.
- * @param {Object} options - Configuration options.
- * @param {Function} [options.view] - A single view function (state, update).
- * @param {Object.<string, Function>} [options.routes] - A mapping of paths to view functions.
- * @param {Object} [options.state={}] - Initial state or an existing signal instance.
- * 
+ * Mounts a reactive view to a DOM selector.
+ * Manages state subscription, rendering, and VNode patching.
+ *
+ * @param {String} selector - The CSS selector for the root element.
+ * @param {Function} view - A view function receiving (ctx) and returning a VNode.
+ * @param {Object} [state={}] - Initial state object or an existing signal instance.
  * @returns {Object} The signal instance used by the application.
  */
-export const mount = (selector, view, state = {}, opts = {}) => {
+export const mount = (selector, view, state = {}) => {
     const container = document.querySelector(selector);
     const data = state?.subscribe ? state : signal(state || {});
-    const routes = opts.routes;
     let oldVNode = null;
 
     const render = () => {
@@ -210,49 +213,15 @@ export const mount = (selector, view, state = {}, opts = {}) => {
             content: null
         };
 
-        if (routes) {
-            const hash = window.location.hash;
-            
-            // bypass anchor links
-            if (hash && !hash.startsWith("#/")) return;
+        const vnode = typeof view === 'function' ? view(ctx) : ctx.content;
 
-            const path = hash.slice(1) || '/';
-            let component = routes[path];
-
-            if (!component) {
-                for (const r in routes) {
-                    if (r.includes(':')) {
-                        const RE = new RegExp(`^${r.replace(/:[^\s/]+/g, '([^/]+)')}$`);
-                        const match = path.match(RE);
-                        if (match) {
-                            component = routes[r];
-                            const keys = r.match(/:[^\s/]+/g);
-                            if (keys) {
-                                keys.forEach((key, i) => ctx.params[key.substring(1)] = match[i + 1]);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            const activeView = component || routes['404'];
-            if (activeView) {
-                ctx.content = activeView(ctx);
-            }
-        }
-
-        // handle layout (view) content
-        const finalVNode = (typeof view === 'function') ? view(ctx) : ctx.content;
-
-        if (finalVNode) {
-            patch(container, finalVNode, oldVNode, 0);
-            oldVNode = finalVNode;
+        if (vnode) {
+            patch(container, vnode, oldVNode, 0);
+            oldVNode = vnode;
         }
     };
 
     data.subscribe(render);
-    if (routes) window.addEventListener('hashchange', render);
     render();
     return data;
 };

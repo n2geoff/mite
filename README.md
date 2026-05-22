@@ -1,5 +1,7 @@
 # Mite JS
 
+> A client-side web foundation for single-page-apps
+
 ```
      /___\        ___ _
      )O.o(  |\/| o | |_   BE small
@@ -11,21 +13,43 @@ Brain space is limited, time is limited, ideas are abundant, so enter: **Mite JS
 
 We have all been there...
 
-Its midnight. You need sleep. With morning comes work and it has demands, but you have an idea that you cannot shake.  You need to just get it out of your head and into some code.  You could grab one of the heavy-weight champions, but you don't have time for all the boilerplate fluff. You could also reach for AI, but that is prompt-after-prompt until the sun comes up -- no time for that.
+
+
+*Its midnight. You need sleep. With morning comes work and it has demands, but you have an idea that you cannot shake.  You need to just get it out of your head and into some code.  You could grab one of the heavy-weight champions, but you don't have time for all the boilerplate fluff. You could also reach for AI, but that is prompt-after-prompt until the sun comes up -- no time for that.*
+
+
 
 Build your idea NOW, no distractions, minimal **Mite** work!
 
-Give it a try
 
+
+[Give it a try](dist/mite.min.js)
 
 ## Features
 
-- **Minimalist Core**: ~3KB minified.
+- **Minimalist**: ~2.2KB minified.
 - **Hyperscript Syntax**: Fast, readable component building.
 - **Reactive State**: Built-in global signal with a simple `.update()` API.
 - **Smart Patching VDOM**: Key-aware diffing and robust Fragment support.
 - **Parametric Hash Router**: Support for dynamic routes (e.g., `/user/:id`).
-- **Build Variation**: From core-to-full featured your choice.
+- **Build Variation**: From min-to-full featured your choice.
+
+Add More...
+
+Mite also includes a collection of minimal language agnostic helpers, you can include in your builds or use with any other framework or just plain Javascript
+
+- HTTP Client
+
+- DOM Utility
+
+- Local Storage
+
+- Session Storage
+
+- Cookie Storage
+
+See `/docs` from more information.
+
 
 
 ## Getting Started
@@ -35,21 +59,26 @@ Just import `Mite JS` in your project
 ```js
 import { h, mount } from './mite.min.js';
 ```
+
 You REALLY only need TWO functions
 
 *That seriously reduces congnitive load!*
+
+
 
 ### Pick You Flavor
 
 Depending on your needs, there are a few variations, see below
 
-| Build                            | Size* | Features                                 |
-| -------------------------------- | ----- | ---------------------------------------- |
-| [Core](/dist/mite.min.js)        | ~3KB  | minimal `h`, `mount`, `signal`           |
-| [Full](/dist/mite.full.min.js)   | ~4KB  | adds [http]() and [dom($)]() utilities   |
-
+| Build                          | Size*   | Features                                                                    |
+| ------------------------------ | ------- | --------------------------------------------------------------------------- |
+| [Minimal](dist/mite.min.js)    | ~2.2KB  | minimal `h`, `mount`, `signal`                                              |
+| [HTML](dist/mite.html.min.js)  | ~3.6KB~ | htm syntax `html`, `mount`, `signal`                                        |
+| [Core](/dist/mite.min.js)      | ~3KB    | for SPA `h`, `route`, `signal`                                              |
+| [Full](/dist/mite.full.min.js) | ~4KB    | adds [http](), [dom($)](), [local](), [session](), and [cookie]() utilities |
 
 > \* Minified Size, `gzip` is event SMALLER!
+
 
 
 ## Usage Examples
@@ -126,7 +155,7 @@ h("p", {html: "I'm your <strong>Huckleberry</strong>"})
 Mite shines when building multi-page interfaces. The `route` passes `params` (like `:id`) directly to your views
 
 ```js
-import { h, mount } from '../dist/mite.min.js';
+import { h, route } from '../dist/mite.core.min.js';
 
 // Master View
 const Home = ({state}) => h('div', [
@@ -162,21 +191,24 @@ const state = {
     ]
 };
 
-mount('#app', null, state, {routes});
+route('#app', null, state, {routes});
 ```
 
 ## Why Hyperscript
 
 It provides the smallest foot-print, requires no build step, still quite readable.
 
-
 ## API Reference
 
-| **Function** | **Description**           |
-| -------------| ------------------        |
-| `h(tag, props, ...children)`             | Hyperscript style UI component. Returns DOM. |
+| **Function**                                   | **Description**                              |
+| ---------------------------------------------- | -------------------------------------------- |
+| `h(tag, props, ...children)`                   | Hyperscript style UI component. Returns DOM. |
 | `mount(selector, view, state = {}, opts = {})` | Mounts component to DOM. Returns a signal.   |
-| `signal(initial, log = false)`    | Creates reactive signal store                       |
+| `signal(initial, log = false)`                 | Creates reactive signal store                |
+
+> [or XHTM Alternative](dist/mite.html.min.js) via Template Literal syntax.
+
+
 
 ## Test
 
