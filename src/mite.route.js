@@ -1,3 +1,5 @@
+import {signal, mount} from "./mite.js";
+
 /**
  * Creates a hash-based router that delegates rendering to mount.
  * Handles dynamic params, 404 fallback, anchor link bypass, and layout wrapping.
