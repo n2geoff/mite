@@ -11,9 +11,10 @@
         <div id="app"></div>
     </main>
     <script type="module">
-        import {h, route} from "../dist/mite.core.min.js";
+        import {h, route} from "../../dist/mite.core.min.js";
         import {Counter} from "./components/Counter.js";
         import {Todo} from "./components/Todo.js";
+        import { TranspilerTool } from "./pages/ConverterPage.js";
 
         // --- Components ---
 
@@ -22,6 +23,7 @@
             h('ul',{}, [
                 h('li', [h('a', {href: '#/'}, 'Home')]),
                 h('li', [h('a', {href: '#/docs'}, 'Docs')]),
+                h('li', [h('a', {href: '#/converter'}, 'Converter')]),
                 h('li',{},h('a',{ href: 'https://github.com/n2geoff/mite', target: "_NEW", class: 'secondary' },'GitHub'))
             ])
         ]);
@@ -89,11 +91,23 @@
             )
         ]);
 
+        const Converter = ({state, update}) => h('div',{key: 'docs'},[
+            Navigation(),
+            h('main',{ class: 'container' },
+                h('article',{},
+                    h('h2',{},'HTML Converter'),
+                    h('p',{},'Convert raw HTML into optimized VNode functions.'),
+                    TranspilerTool({state, update})
+                )
+            )
+        ]);
+
         // --- Initialization ---
 
         const routes = {
             '/': Home,
             '/docs': Docs,
+            "/converter": Converter,
             '404': () => h('h1',{},'404')
         };
 
