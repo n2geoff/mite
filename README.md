@@ -62,8 +62,8 @@ Depending on your needs, there are a few variations, see below
 | Build                          | Size*   | Features                                                                    |
 | ------------------------------ | ------- | --------------------------------------------------------------------------- |
 | [Minimal](dist/mite.min.js)    | ~2.2KB  | minimal `h`, `mount`, `signal`                                              |
-| [HTML](dist/mite.html.min.js)  | ~3.6KB~ | htm syntax `html`, `mount`, `signal`                                        |
-| [Core](/dist/mite.min.js)      | ~3KB    | for SPA `h`, `route`, `signal`                                              |
+| [HTML](dist/mite.html.min.js)  | ~3.6KB | htm syntax `html`, `mount`, `signal`                                        |
+| [Core](/dist/mite.core.min.js)      | ~3KB    | for SPA `h`, `route`, `signal`                                              |
 | [Full](/dist/mite.full.min.js) | ~4KB    | adds [http](), [dom($)](), [local](), [session](), and [cookie]() utilities |
 
 > \* Minified Size, `gzip` is event SMALLER!
@@ -234,8 +234,9 @@ Anyone is welcome to contribute, however, if you decide to get involved, please 
 
 ## Todo
 
+- fix typed definitions
 - add more `tests/`
-- maybe add `test.it` as a client-side testing utility into `src/`
+    - maybe add `test.it` as a client-side testing utility into `src/`
 - improve github pages
 - add more examples
 
