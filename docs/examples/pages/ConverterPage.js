@@ -1,7 +1,7 @@
 import {h} from "../../../src/mite.js";
 import { htmlToH, htmlToH2 } from "../components/converter.js";
 
-export function ConverterPage({ state, update }) {
+export function ConverterPage() {
 
     const convert = () => {
         const input = document.getElementById("input").value || "";
@@ -113,6 +113,7 @@ export const TranspilerTool = ({ state, update }) => {
             const generatedVNode = new Function('h',`return ${state.convertedCode}`)(h);
             previewContent = generatedVNode;
         } catch (e) {
+            console.error(e);
             previewContent = h('p',{ style: 'color: var(--pico-error-color)' },'Execution Error: Check for unclosed tags or invalid HTML.');
         }
     }

@@ -14,10 +14,11 @@ export default defineConfig([
 			js,
 		},
 		extends: ["js/recommended"],
-		rules: {
-            "no-empty": ["error", {"allowEmptyCatch": true}],
-			"no-unused-vars": "warn",
-			"no-undef": "warn",
+    rules: {
+        "indent": ["error", 4],
+        "no-empty": ["error", {"allowEmptyCatch": true}],
+        "no-unused-vars": "warn",
+        "no-undef": "warn",
 		},
 	},
 ]);
