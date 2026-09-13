@@ -17,7 +17,7 @@ We have all been there...
 
 Build your idea NOW, no distractions, minimal **Mite** work!
 
-[Give it a try](dist/mite.min.js)
+[Download from dist/](dist/mite.min.js)
 
 
 ## Features
@@ -39,34 +39,47 @@ Mite also includes a collection of minimal language agnostic helpers, you can in
 - Session Storage
 - Cookie Storage
 
-See `/docs` from more information.
+See `/docs` for more information.
 
 
 ## Getting Started
 
-Just import `Mite JS` in your project
+Mite isn't on npm yet — copy a build file from [`dist/`](dist/) into your project (a CDN arrives with `v1.0.0`).
 
-```js
-import { h, mount } from './mite.min.js';
+All you need in your HTML is an element to mount into:
+
+```html
+<!doctype html>
+<html>
+<body>
+    <div id="app"></div>
+    <script type="module">
+        import { h, mount } from './mite.min.js';
+
+        const App = ({state}) => h('h1', {}, `Hello ${state.name}`);
+        mount('#app', App, { name: 'Mite' });
+    </script>
+</body>
+</html>
 ```
 
 You REALLY only need TWO functions
 
-*That seriously reduces congnitive load!*
+*That seriously reduces cognitive load!*
 
 
-### Pick You Flavor
+### Pick Your Flavor
 
 Depending on your needs, there are a few variations, see below
 
 | Build                          | Size*   | Features                                                                    |
 | ------------------------------ | ------- | --------------------------------------------------------------------------- |
 | [Minimal](dist/mite.min.js)    | ~2.2KB  | minimal `h`, `mount`, `signal`                                              |
-| [HTML](dist/mite.html.min.js)  | ~3.6KB | htm syntax `html`, `mount`, `signal`                                        |
+| [HTML](dist/mite.html.min.js)  | ~3.6KB | tagged template `html` (no raw `h`), `mount`, `signal`                       |
 | [Core](/dist/mite.core.min.js)      | ~3KB    | for SPA `h`, `route`, `signal`                                              |
 | [Full](/dist/mite.full.min.js) | ~4KB    | adds [http](), [dom($)](), [local](), [session](), and [cookie]() utilities |
 
-> \* Minified Size, `gzip` is event SMALLER!
+> \* Minified Size, `gzip` is even SMALLER!
 
 
 ## Usage Examples
@@ -132,7 +145,7 @@ mount('#app', TodoApp, { todos: [] });
 
 #### Raw HTML
 
-Rendering raw `html` can be achived with the property key of `html`, and the value of the html you would like to render.  Treat as UNSAFE, only VERY basic sanitation provided
+Rendering raw `html` can be achieved with the property key of `html`, and the value of the html you would like to render.  Treat as UNSAFE, only VERY basic sanitation provided
 
 ```js
 h("p", {html: "I'm your <strong>Huckleberry</strong>"})
@@ -179,7 +192,7 @@ const state = {
     ]
 };
 
-route('#app', null, state, {routes});
+route('#app', routes, state);
 ```
 
 

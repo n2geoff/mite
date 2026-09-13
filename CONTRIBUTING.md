@@ -62,7 +62,7 @@ If it is supported in all major browers without transpiling, then please use tho
 
 Currently the JavaScript Target is ES2022.
 
-This project is linted agaist [ESLint](https://eslint.org/) and the [`.eslintrc.js`](.eslintrc.js) is dead-simple, and all you need to followed.
+This project is linted agaist [ESLint](https://eslint.org/) and the [`eslint.config.js`](.eslint.config.js) is dead-simple, and all you need to followed.
 
 Thank you for reading this.
 
