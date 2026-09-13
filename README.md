@@ -217,6 +217,14 @@ bun run build
 ```
 
 
+## 🤖 AI Agent Skill
+
+This repo ships an [Agent Skill](https://agentskills.io) so coding agents can build mite.js apps from documented API knowledge alone:
+
+- **Skill**: [`SKILL.md`](.agents/skills/mite-js/SKILL.md) — full API reference, patterns & guidelines
+- **Install**: copy the `mite-js` folder into your agent's skills directory (e.g., `~/.pi/agent/skills/mite-js/` or `.agents/skills/mite-js/`)
+
+
 ## Support
 
 Please open [an issue](https://github.com/n2geoff/mite/issues/new) for support.
